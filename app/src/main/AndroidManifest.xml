@@ -3,10 +3,8 @@
     package="org.ict.project_with_a_jump">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    // 위치 관련 권한
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    // retrofit 네트워크 통신용 권한 추가
 
     <application
         android:allowBackup="true"
@@ -15,6 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project_with_a_jump">
+        <activity android:name=".ChangeListableTime"></activity>
+        <activity android:name=".ChangeOfficeHour" />
+        <activity android:name=".PersonalInfo" />
+        <activity android:name=".FragmentGraph2" />
+        <activity android:name=".FragmentGraph1" />
+        <activity android:name=".History" />
+        <activity android:name=".SetUp" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
