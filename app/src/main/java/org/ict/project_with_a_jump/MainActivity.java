@@ -24,8 +24,8 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     //영업시간 설정
-    private static final String OPEN = "8:30:00";
-    private static final String CLOSE = "19:30:00";
+    private static final String OPEN = "8:00:00";
+    private static final String CLOSE = "22:00:00";
 
     Date nowTime = null;
     Date openTime = null;
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         // 툴바
         toolbar= (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         //getActionBar().setDisplayShowTitleEnabled(false);
 
 

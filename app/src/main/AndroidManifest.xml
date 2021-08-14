@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project_with_a_jump">
-        <activity android:name=".ChangeListableTime"></activity>
+        <activity android:name=".PeriodDialog"></activity>
+        <activity android:name=".ChangeListableTime" />
         <activity android:name=".ChangeOfficeHour" />
         <activity android:name=".PersonalInfo" />
         <activity android:name=".FragmentGraph2" />
