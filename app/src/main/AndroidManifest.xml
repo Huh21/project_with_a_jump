@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.ict.project_with_a_jump">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -13,15 +14,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project_with_a_jump">
-        <activity android:name=".PeriodDialog"></activity>
+        <activity android:name=".PeriodDialog"
+            tools:ignore="Instantiatable"></activity>
         <activity android:name=".ChangeListableTime" />
         <activity android:name=".ChangeOfficeHour" />
         <activity android:name=".PersonalInfo" />
-        <activity android:name=".FragmentGraph2" />
-        <activity android:name=".FragmentGraph1" />
+        <activity android:name=".FragmentGraph2"
+            tools:ignore="Instantiatable" />
+        <activity android:name=".FragmentGraph1"
+            tools:ignore="Instantiatable" />
         <activity android:name=".History" />
         <activity android:name=".SetUp" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".HomeScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
