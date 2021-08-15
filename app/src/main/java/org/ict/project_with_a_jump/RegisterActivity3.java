@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.google.firebase.appcheck.interop.BuildConfig;
 
 import java.io.File;
 

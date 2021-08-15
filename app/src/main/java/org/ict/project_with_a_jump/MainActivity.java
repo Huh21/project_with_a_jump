@@ -46,9 +46,9 @@ public class MainActivity extends AppCompatActivity {
                             public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     /*병합 전이라 잠깐 변경한 부분*/
-                                     //Intent intent = new Intent(MainActivity.this, HomeScreen.class);
-                                     //startActivity(intent);
-                                    Toast.makeText(MainActivity.this, "로그인 성공!", Toast.LENGTH_SHORT).show();
+                                     Intent intent = new Intent(MainActivity.this, HomeScreen.class);
+                                     startActivity(intent);
+                                    //Toast.makeText(MainActivity.this, "로그인 성공! 홈화면으로 연결하자!", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(MainActivity.this, "로그인 오류", Toast.LENGTH_SHORT).show();
                                 }
