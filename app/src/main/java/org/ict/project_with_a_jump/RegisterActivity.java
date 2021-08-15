@@ -21,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.annotations.NotNull;
 
 
+
+
 public class RegisterActivity extends AppCompatActivity {
     Button nextbutton;
     private EditText email_join;
@@ -46,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         nextbutton = findViewById(R.id.nextbutton);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("final");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("project_with_a_jump");
 
         nextbutton.setOnClickListener(new View.OnClickListener() {
             @Override

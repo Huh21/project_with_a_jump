@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
     Button registerButton;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 firebaseAuth.signInWithEmailAndPassword(email,pwd)
                         .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
-                            public void onComplete(Task<AuthResult> task) {
+                            public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     /*병합 전이라 잠깐 변경한 부분*/
                                      //Intent intent = new Intent(MainActivity.this, HomeScreen.class);
