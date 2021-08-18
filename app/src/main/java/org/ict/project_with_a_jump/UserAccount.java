@@ -16,6 +16,10 @@ public class UserAccount
 
     public UserAccount() { }
 
+    public UserAccount(String companyName){
+        this.companyName=companyName;
+    }
+
     public String getIdToken() {
         return idToken;
     }

@@ -1,10 +1,12 @@
 package org.ict.project_with_a_jump;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.hardware.usb.UsbRequest;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,6 +18,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,12 +49,19 @@ public class HomeScreen extends AppCompatActivity {
     private static Handler handler;
     Toolbar toolbar;
 
+    //시설 이름
+    TextView placeName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
 
+        //set 시설 이름
+        placeName= (TextView)findViewById(R.id.name);
+        Intent receive_intent= getIntent();
+        String companyName= receive_intent.getStringExtra("place");
+        placeName.setText(companyName);
 
         // 툴바
         toolbar= (Toolbar)findViewById(R.id.toolbar);
@@ -50,14 +69,13 @@ public class HomeScreen extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         //getActionBar().setDisplayShowTitleEnabled(false);
 
-
         clock2=(TextView)findViewById(R.id.nowTime2);
 
         //오늘 날짜
         clock1=(TextView)findViewById(R.id.nowTime1);
 
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf1= new SimpleDateFormat("yyyy년 MM월 dd일");
+        SimpleDateFormat sdf1= new SimpleDateFormat("MM월 dd일 (EE)");
         String dateString = sdf1.format(cal.getTime());
         clock1.setText(dateString);
 
@@ -84,8 +102,8 @@ public class HomeScreen extends AppCompatActivity {
             }
         });
         th.start();
-
     }
+
 
     //현재시간 가져오기
     public String getNowTime(SimpleDateFormat sdf) {
@@ -147,4 +165,7 @@ public class HomeScreen extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
 }
