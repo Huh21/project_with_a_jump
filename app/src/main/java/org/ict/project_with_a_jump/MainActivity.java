@@ -22,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
 
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity {
     Button registerButton;
     Button loginButton;
@@ -30,35 +32,13 @@ public class MainActivity extends AppCompatActivity {
     private EditText pwd_login;
     FirebaseAuth firebaseAuth;
 
-    //유종: set 시설 이름
-    String placeName;
-    DatabaseReference rootRef;
-    DatabaseReference uidRef;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //유종: 시설 이름 표시
-        String uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
-        rootRef= FirebaseDatabase.getInstance().getReference();
-        uidRef= rootRef.child("project_with_a_jump").child("UserAccount:").child(uid).child("companyName");
-        uidRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot != null){
-                    String companyName= snapshot.getValue(String.class);
-                    placeName=companyName;
-                }else{
-                    placeName="snapshot is null";
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        Calendar cal = Calendar.getInstance();
+        int dayOfWeek= cal.get(Calendar.DAY_OF_WEEK); //1(일)~7(토)
 
         login=(Button)findViewById(R.id.login);
         email_login=(EditText) findViewById(R.id.email_login);
@@ -77,9 +57,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     Intent intent = new Intent(MainActivity.this, HomeScreen.class);
-                                    intent.putExtra("place",placeName);
                                     startActivity(intent);
-                                    //Toast.makeText(MainActivity.this, "로그인 성공!", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(MainActivity.this, "로그인 오류", Toast.LENGTH_SHORT).show();
                                 }
@@ -87,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                         });
             }
         });
+
 
         registerButton=findViewById(R.id.사업자register);
         registerButton.setOnClickListener(new View.OnClickListener() {

@@ -79,6 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
                             account.setDaum1(daum1);
                             account.setDaum2(daum2);
                             account.setCompanyName(companyName);
+                            //account.setOfficeHour("null");
 
                             //setvalue(): database에 insert(삽입)
                             mDatabaseRef.child("UserAccount:").child(firebaseUser.getUid()).setValue(account);

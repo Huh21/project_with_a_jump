@@ -13,6 +13,7 @@ public class UserAccount
     private String daum1;
     private String daum2;
     private String companyName;
+    private String officeHour;
 
     public UserAccount() { }
 
@@ -83,4 +84,9 @@ public class UserAccount
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
     }
+
+    //영업시간 추가
+    //public String getOfficeHour(){return officeHour;}
+
+    //public void setOfficeHour(String officeHour){this.officeHour=officeHour;}
 }
