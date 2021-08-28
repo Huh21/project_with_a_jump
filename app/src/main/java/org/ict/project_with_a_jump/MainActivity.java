@@ -2,9 +2,12 @@ package org.ict.project_with_a_jump;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,7 +17,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button button1;
+    Dialog dialog;
     TextView Day;
 
     //현재 시간
@@ -28,25 +31,48 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //작성하기 버튼
-        button1 = findViewById(R.id.ButtonSubmit);
+        //inflate
+        LayoutInflater inflater = getLayoutInflater();
+        View v1 = inflater.inflate(R.layout.dialog, null);
 
-        button1.setOnClickListener(new View.OnClickListener() {
+        //팝업창
+        dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog);
+
+        findViewById(R.id.ButtonSubmit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                showDialog();
+            }
+        });
+        //시간 출력
+        Day = (TextView) findViewById(R.id.Day);
+        Day.setText(formatDate);
 
+    }
+    public void showDialog () {
+        dialog.show();
+
+        //동의
+        Button yesBtn = dialog.findViewById(R.id.yesBtn);
+        yesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "명부가 작성되었습니다",
                         Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+                startActivity(intent);
             }
         });
 
-        button1.setOnClickListener((v) -> {
-            Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
-            startActivity(intent);
-        } );
-
-        //시간 출력
-        Day=(TextView)findViewById(R.id.Day);
-        Day.setText(formatDate);
+        //비동의
+        dialog.findViewById(R.id.noBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
     }
 }
