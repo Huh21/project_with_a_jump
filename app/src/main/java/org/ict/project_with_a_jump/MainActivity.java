@@ -23,6 +23,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -30,23 +36,29 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
+
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     private boolean saveData;
+    String facilityName = "";
     private SharedPreferences checkData;
     private GpsTracker gpsTracker;
     // fine_location : coarse보다 더 정확한 위치 제공, coarse_location : 도시 블록 내에 위치 정확성 제공
+
+    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Manage"); // 파이어베이스 사업자 데이터 연결
+
     private TextView textview_address;
     private TextView user_name;
     private TextView welcome;
     private EditText editText;
     private Button ShowLocationButton;
     private Button FindLocationButton;
-    private Button logoutBtn;
+    private Button changeBtn;
     private Button listBtn;
     private Button modifyBtn;
     private CheckBox auto_check;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         ShowLocationButton = findViewById(R.id.show); // 시설 찾기
         FindLocationButton = findViewById(R.id.find); // 직접 검색
-        logoutBtn = findViewById(R.id.logoutBtn); // 로그아웃
+        changeBtn = findViewById(R.id.logoutBtn); // 로그아웃
         listBtn = findViewById(R.id.listBtn); // 명부 입장 기록 리스트
         modifyBtn = findViewById(R.id.modifyBtn); // 사용자 정보 수정
         auto_check = findViewById(R.id.auto_check); // 자동 입장 체크
@@ -72,12 +84,13 @@ public class MainActivity extends AppCompatActivity {
             textview_address.setText(getGpsTracker());
         }
 
-        //Intent intentFromCertification = getIntent(); // 본인인증 화면으로부터 사용자명 받아오기
-        //user_name.setText(intentFromCertification.getStringExtra("user_name"));
+        Intent intentFromCertification = getIntent(); // 본인인증 화면으로부터 사용자명 받아오기
+        user_name.setText(intentFromCertification.getStringExtra("user_name"));
 
         //Intent intentFromOwner = getIntent(); // 등록된 사업자 리스트 받아오기
         // Facility facility = (Facility)intentFromOwner.getSerializableExtra("facility");
 
+        // 현재 위치로 찾기
         ShowLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -92,13 +105,14 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, facilityName + " 입장", Toast.LENGTH_LONG).show();
 
                     // 해당 시설의 명부 화면으로 이동
-                    /*Intent intent = new Intent(this,.class);
+                    Intent intent = new Intent(getApplicationContext(), EntryActivity.class);
                     intent.putExtra("facilityName", facilityName);
-                    startActivity(gintent); */
+                    startActivity(intent);
                 }
             }
         });
 
+        // 시설명으로 찾기
         FindLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -116,9 +130,9 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, facilityName + " 입장", Toast.LENGTH_LONG).show();
 
                         // 해당 시설의 명부 화면으로 이동
-                        /*Intent intent = new Intent(this,.class);
+                        Intent intent = new Intent(getApplicationContext(), EntryActivity.class);
                         intent.putExtra("facilityName", facilityName);
-                        startActivity(intent); */
+                        startActivity(intent);
                     }
                 }
             }
@@ -147,15 +161,50 @@ public class MainActivity extends AppCompatActivity {
 
     // 주소나 사용자의 입력값을 통해 시설명을 찾아주는 함수
     public String findFacility(String data, String who) {
-        String facilityName = "";
-
         switch (who) {
             case "show":
-                facilityName = "show";
+                facilityName = "not found";
+
+                reference.child("ManageAccount").child("daum1").equalTo(data).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        facilityName = dataSnapshot.getKey(); // idToken 값
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        throw databaseError.toException();
+                    }
+                });
+
+                reference.child("ManageAccount").child(facilityName).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        facilityName = dataSnapshot.getValue().toString(); // 시설명 값
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        throw databaseError.toException();
+                    }
+                });
                 break;
 
+
             case "find":
-                facilityName = "find";
+                facilityName = "not found";
+
+                reference.child("ManageAccount").orderByChild("name").equalTo(data).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        facilityName = dataSnapshot.getValue().toString();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        throw databaseError.toException();
+                    }
+                });
                 break;
         }
 
@@ -171,6 +220,29 @@ public class MainActivity extends AppCompatActivity {
 
         String address = getCurrentAddress(latitude, longitude);
         return address;
+    }
+
+    // 사용자의 현재 위치와 데이터베이스 주소 비교하는 메소드
+    public boolean compareCurrentAddress(String gpsAddress) {
+        Boolean check = false;
+
+        reference.orderByChild("daum1").equalTo(gpsAddress).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String address = dataSnapshot.getValue().toString();
+
+                if (!address.equals(gpsAddress)) {
+                    Toast.makeText(MainActivity.this, "현재 위치한 시설에 생성된 명부가 존재하지 않습니다.", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+
+        return true;
     }
 
     // onRequestPermissionsResult의 결과를 리턴받는 메소드

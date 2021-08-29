@@ -31,7 +31,7 @@
         android:gravity="center"
         android:text="명부기록"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/logout"
+        app:layout_constraintStart_toEndOf="@+id/change"
         app:layout_constraintTop_toBottomOf="@+id/listBtn" />
 
     <TextView
@@ -151,8 +151,7 @@
         android:layout_marginLeft="50dp"
         android:layout_marginEnd="80dp"
         android:layout_marginRight="80dp"
-        android:layout_marginBottom="96dp"
-        android:drawableBottom="@drawable/logout"
+        android:layout_marginBottom="100dp"
         app:backgroundTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/listBtn"
@@ -180,28 +179,26 @@
         android:layout_height="60dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="210dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="103dp"
+        android:layout_marginBottom="100dp"
         android:drawableBottom="@drawable/list"
         android:padding="0sp"
         android:scaleType="centerInside"
         app:backgroundTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/modifyBtn"
-        app:layout_constraintStart_toEndOf="@+id/logoutBtn"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintStart_toEndOf="@+id/logoutBtn" />
 
     <TextView
-        android:id="@+id/logout"
+        android:id="@+id/change"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="36dp"
         android:layout_marginLeft="36dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="로그아웃"
+        android:text="계정전환"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logoutBtn" />
