@@ -14,6 +14,7 @@ public class subActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub);
     }
+
     public void onClick_cf(View v) {
         EditText user_pnumber  = (EditText) findViewById(R.id.user_pnumber);
         Intent intent_02= new Intent(getApplicationContext(), MainActivity2.class);

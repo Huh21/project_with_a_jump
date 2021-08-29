@@ -28,8 +28,6 @@ public class MainActivity2 extends AppCompatActivity {
         textView_ph.setText(String.valueOf(ad));
         textView_ad.setText(String.valueOf(ad));
     }
-    public void onClick_back(View v){
-        finish();
-    }
+
 
 }

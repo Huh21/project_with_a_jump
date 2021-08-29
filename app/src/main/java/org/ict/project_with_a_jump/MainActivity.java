@@ -27,6 +27,7 @@ public class MainActivity<editText, editText2> extends AppCompatActivity {
         String id= ((EditText)findViewById(R.id.user_id)).getText().toString();
 
     }
+
     public void onClick_login(View v) {
         EditText user_id = (EditText) findViewById(R.id.user_id);
         EditText user_ad = (EditText) findViewById(R.id.user_ad);
