@@ -13,27 +13,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.SortedMap;
 
-public class FragmentGraph2 extends Fragment {
-    private Context context;
-    Button chooseTerm;
-    PeriodDialog periodDialog;
+public class FragmentGraph2 extends Fragment implements View.OnClickListener{
+    Button button;
+    private PeriodDialog periodDialog;
     TextView term;
 
+    int[] pickedValues= new int[4];
+
     private LineChart lineChart;
+
+    ArrayList values= new ArrayList(); //그래프 데이터 값
+    ArrayList days= new ArrayList(); //그래프 x축 라벨
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -46,131 +54,71 @@ public class FragmentGraph2 extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        chooseTerm= view.findViewById(R.id.chooseTerm);
+        button= view.findViewById(R.id.chooseTerm);
+        button.setOnClickListener(this);
 
-        //chooseTerm.setOnClickListener(this);
-        if(chooseTerm!=null){
-            chooseTerm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    periodDialog=new PeriodDialog(getContext());
-                    //periodDialog.setCancelable(true);
-                    periodDialog.setUpTerm(term);
-                }
-            });
-        }
-
-        //그래프
-        lineChart = (LineChart) view.findViewById(R.id.lineChart);
-
-        ArrayList entries= new ArrayList();
-        entries.add(new Entry(45,0));
-        entries.add(new Entry(78,1));
-        entries.add(new Entry(36,2));
-        entries.add(new Entry(90,3));
-        entries.add(new Entry(69,4));
-        entries.add(new Entry(55,5));
-        entries.add(new Entry(45,6));
-        entries.add(new Entry(78,7));
-        entries.add(new Entry(27,8));
-        entries.add(new Entry(73,9));
-        entries.add(new Entry(49,10));
-        entries.add(new Entry(85,11));
-
-        LineDataSet lineDataSet= new LineDataSet(entries,"방문자 수");
-        lineDataSet.setCircleColor(Color.BLUE); //그래프 포인트(?값) 색
-        lineDataSet.setColor(Color.BLUE); //그래프 색
-        lineDataSet.setValueTextColor(Color.BLACK);
-        lineDataSet.setValueTextSize(16f);
-
-        //dialog 기간 기본 설정
+        //기간 기본 설정
+        term=view.findViewById(R.id.term);
         Calendar cal= Calendar.getInstance();
         int nowYear= cal.get(Calendar.YEAR);
         int nowMonth= cal.get(Calendar.MONTH);
         int startYear= cal.get(Calendar.YEAR)-1;
         int startMonth= cal.get(Calendar.MONTH)+1;
 
-        term=view.findViewById(R.id.term);
         String str1= startYear+"년 "+startMonth+"월~";
         String str2= nowYear+"년 "+nowMonth+"월";
-        if(term!=null){
-            term.setText("선택된 기간: "+str1+str2);
-        }
+        term.setText(str1+str2);
 
-        //그래프 x축 라벨
-        ArrayList labels= new ArrayList();
-        //작년
-        startYear= startYear % 100;
-        for(int i=startMonth; i<=12; i++){
-            if(i<10){
-                labels.add(startYear+"/0"+i);
-            }else{
-                labels.add(startYear+"/"+i);
-            }
-        }
-        //올해
-        nowYear= nowYear % 100;
-        for(int j=1; j<= nowMonth; j++){
-            //labels.add(nowYear+"/"+j);
-            if(j<10){
-                labels.add(nowYear+"/0"+j);
-            }else{
-                labels.add(nowYear+"/"+j);
+        /* 월별 그래프 */
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyy/MM");
+        int y,m;
+        y=pickedValues[0];
+        m=pickedValues[1];
+        while((y<pickedValues[2]) || ((y==pickedValues[2])&&(m<=pickedValues[3]))){
+            Calendar cal1= Calendar.getInstance();
+            cal1.set(Calendar.YEAR, y);
+            cal1.set(Calendar.MONTH, m);
+            String xLabel= sdf.format(cal1.getTime());
+            days.add(xLabel);
+            m++;
+
+            if(m>=13){
+                m=1;
+                y+=1;
             }
         }
 
-        LineData lineData= new LineData(labels,lineDataSet);
-        if(lineChart!=null){
-            lineChart.setData(lineData);
-        }
 
-        //lineChart.animateXY(5000,5000);
 
-        //데이터값 float->int
-        ValueFormatter vf= new ValueFormatter() {
+
+        //x축 라벨 년도/월로 바꾸기
+        ValueFormatter selectedTerm= new ValueFormatter() {
             @Override
             public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
                 return ""+(int)value;
             }
         };
-        lineData.setValueFormatter(vf);
+        //xAxis.setValueFormatter(selectedTerm);
 
-        XAxis xAxis= lineChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setTextColor(Color.BLACK);
-        xAxis.setDrawGridLines(false);
-        xAxis.setDrawAxisLine(false);
-        xAxis.setDrawLabels(true);
-        xAxis.setLabelsToSkip(0);
-
-        //오른쪽 y축 비활성화
-        YAxis yAxisRight = lineChart.getAxisRight();
-        yAxisRight.setDrawLabels(false);
-        yAxisRight.setDrawAxisLine(false);
-        yAxisRight.setDrawGridLines(false);
-        //yAxisRight.setAxisMaxValue(20f);
-        //yAxisRight.setAxisMinValue(20f);
-
-        lineChart.setDrawGridBackground(false);
-        lineChart.setTouchEnabled(false); //차트 터치x
-        lineChart.setPinchZoom(false);
-        lineChart.setDescription(null);
-        //lineChart.setExtraLeftOffset(15f);
-        //lineChart.setExtraRightOffset(15f);
-        lineChart.invalidate();
 
     }
 
-    /*
     //버튼 누르면 다이얼로그 뜸
     @Override
     public void onClick(View view) {
-        periodDialog=new PeriodDialog(getContext());
+        periodDialog=new PeriodDialog(getContext(), new PeriodDialog.PeriodDialogListener() {
+            @Override
+            public void close(int startYear, int startMonth, int endYear, int endMonth) {
+                pickedValues[0]=startYear;
+                pickedValues[1]=startMonth;
+                pickedValues[2]=endYear;
+                pickedValues[3]=endMonth;
+            }
+        });
         //periodDialog.setCancelable(true);
         periodDialog.setUpTerm(term);
     }
-    */
 }

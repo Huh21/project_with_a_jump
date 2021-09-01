@@ -6,17 +6,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.usb.UsbRequest;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +52,8 @@ public class HomeScreen extends AppCompatActivity {
     Date nowTime = null;
     Date openTime = null;
     Date closingTime = null;
-     */
+    */
+
     int openCompare=100;
     int closingCompare=100;
 
@@ -63,13 +68,16 @@ public class HomeScreen extends AppCompatActivity {
 
     String[] title={"sun","mon","tue","wed","thu","fri","sat"};
 
-    String open, closed;
+    String companyName;
 
+    String open, closed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        startActivity(new Intent(this,Loading.class));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
+
 
         /* findViewById */
         clock1=(TextView)findViewById(R.id.nowTime1);
@@ -79,31 +87,14 @@ public class HomeScreen extends AppCompatActivity {
         officeHour= (TextView)findViewById(R.id.officeHour);
         state= (TextView)findViewById(R.id.state);
 
-        /* 툴바 */
-        toolbar= (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        //getActionBar().setDisplayShowTitleEnabled(false);
-
         /* 오늘 날짜, 시간 */
-        Calendar cal = Calendar.getInstance();
+        Calendar cal=Calendar.getInstance();
         SimpleDateFormat sdf1= new SimpleDateFormat("MM월 dd일 (EE)");
         SimpleDateFormat sdf3= new SimpleDateFormat("a hh시 mm분 ss초"); //보여주는 방식
         SimpleDateFormat sdf2= new SimpleDateFormat("HH:mm"); //영업시간과 비교할 형식
+        String dateString = sdf1.format(cal.getTime()); //오늘 날짜
         int dayOfWeek= cal.get(Calendar.DAY_OF_WEEK);
 
-        String dateString = sdf1.format(cal.getTime()); //오늘 날짜
-        clock1.setText(dateString);
-
-        /* Firebase에서 정보 가져오기 */
-        //시설 이름
-        //Intent receive_intent= getIntent();
-        //String companyName= receive_intent.getStringExtra("place");
-        //placeName.setText(companyName);
-
-        //영업시간
-        //open= receive_intent.getStringExtra("openTime");
-        //closed= receive_intent.getStringExtra("closedTime");
         String uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference rootRef= FirebaseDatabase.getInstance().getReference();
 
@@ -113,7 +104,8 @@ public class HomeScreen extends AppCompatActivity {
             public void onDataChange(DataSnapshot snapshot) {
                 if(snapshot != null){
                     UserAccount user= snapshot.getValue(UserAccount.class);
-                    placeName.setText(user.getCompanyName());
+                    companyName= user.getCompanyName();
+                    placeName.setText(companyName);
                 }else{
                     placeName.setText("snapshot(placeName) is null");
                 }
@@ -125,6 +117,18 @@ public class HomeScreen extends AppCompatActivity {
             }
         });
 
+        /*
+        SharedPreferences pref= getSharedPreferences("test",MODE_PRIVATE);
+        String open_ = pref.getString("tue1","디폴트");
+        if(open_ != "디폴트") {
+            open=open_;
+        }
+        String closed_ =pref.getString("tue2", "디폴트");
+        if(closed !="디폴트") {
+            closed=closed_;
+        }
+
+         */
 
         DatabaseReference uidRef2= rootRef.child("project_with_a_jump").child("UserAccount:").child(uid).child("officeHour").child(title[dayOfWeek-1]);
         uidRef2.addValueEventListener(new ValueEventListener() {
@@ -152,7 +156,18 @@ public class HomeScreen extends AppCompatActivity {
             }
         });
 
-        //현재 시간
+        
+        /* Firebase에서 정보 가져오기 */
+        //시설 이름
+        //Intent receive_intent= getIntent();
+        //String companyName= receive_intent.getStringExtra("place");
+        //placeName.setText(companyName);
+
+        //영업시간
+        //open= receive_intent.getStringExtra("openTime");
+        //closed= receive_intent.getStringExtra("closedTime");
+
+        //갱신되는 현재 시간
         Thread th = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -173,8 +188,18 @@ public class HomeScreen extends AppCompatActivity {
             }
         });
         th.start();
-    }
 
+        /* 툴바 */
+        toolbar= (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //getActionBar().setDisplayShowTitleEnabled(false);
+
+
+        clock1.setText(dateString);
+
+
+    }
 
     //sdf 형식으로 현재시간 가져오기
     public String getNowTime(SimpleDateFormat sdf) {
@@ -185,6 +210,7 @@ public class HomeScreen extends AppCompatActivity {
 
     //현재시간,영업시간 비교하기
     public void showMessage(SimpleDateFormat sdf, String nowString){
+
         //시간 비교를 위해 String 타입의 시간->Date 타입으로 바꾸기
         try{
             nowTime= sdf.parse(nowString);
@@ -218,8 +244,9 @@ public class HomeScreen extends AppCompatActivity {
         }else{
             state.setText("영업 시작 시간과 종료 시간을 모두 입력해주세요.");
         }
-    }
 
+
+    }
 
     // 옵션 메뉴 관련 메소드
     @Override
@@ -242,4 +269,17 @@ public class HomeScreen extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    //오늘의 영업시간 불러오기
+    public void takeInfo(EditText editText,String key){
+        SharedPreferences pref= getSharedPreferences("test",MODE_PRIVATE);
+        String result = pref.getString(key,"디폴트");
+        if(result!="디폴트"){
+            editText.setText(result);
+        }else{ //해당 키 값이 없을 경우(=저장된 데이터가 없을 경우)
+
+        }
+    }
+
 }

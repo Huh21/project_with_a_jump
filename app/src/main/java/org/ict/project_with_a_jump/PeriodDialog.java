@@ -28,9 +28,17 @@ public class PeriodDialog {
     Button cancel, confirm;
     Calendar cal;
 
-    public PeriodDialog(@NonNull Context context) {
-        //super(context);
+    private PeriodDialogListener listener;
+
+
+
+    public PeriodDialog(@NonNull Context context, PeriodDialogListener listener) {
         this.context=context;
+        this.listener=listener;
+    }
+
+    public interface PeriodDialogListener{
+        void close(int startYear, int startMonth, int endYear, int endMonth);
     }
 
     public void setUpTerm(TextView term){
@@ -110,13 +118,13 @@ public class PeriodDialog {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //기간 제대로 선택되었는지 확인
                 if((pickedValue1>pickedValue3)||((pickedValue1==pickedValue3)&&(pickedValue2>=pickedValue4))){
                     Toast.makeText(confirm.getContext(), "종료 날짜를 시작 날짜 이후로 설정해주세요.",Toast.LENGTH_SHORT).show();
                 } else{
                     String msg1=Integer.toString(pickedValue1)+"년 "+Integer.toString(pickedValue2)+"월";
                     String msg2=Integer.toString(pickedValue3)+"년 "+Integer.toString(pickedValue4)+"월";
                     term.setText(msg1+"~"+msg2);
+                    listener.close(pickedValue1,pickedValue2,pickedValue3,pickedValue4);
                     dialog.dismiss();
                 }
             }
