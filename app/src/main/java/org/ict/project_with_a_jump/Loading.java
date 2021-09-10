@@ -38,7 +38,7 @@ public class Loading extends AppCompatActivity{
 
             }
         };
-        handler.sendEmptyMessageDelayed(0,1300);
+        handler.sendEmptyMessageDelayed(0,1500);
         //public void onBackPressed(){} //loading 띄우는 과정에 백 버튼 누를수도
     }
 

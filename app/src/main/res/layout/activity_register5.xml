@@ -46,12 +46,14 @@
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/mon1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:hint="00시00분"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:inputType="time"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -62,12 +64,14 @@
             android:textAlignment="center" />
 
         <EditText
+            android:id="@+id/mon2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:hint="00시00분"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:inputType="time"/>
     </LinearLayout>
 
     <LinearLayout
@@ -93,12 +97,14 @@
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/tue1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:hint="00시00분"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:inputType="time"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -109,12 +115,14 @@
             android:textAlignment="center" />
 
         <EditText
+            android:id="@+id/tue2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:hint="00시00분"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:inputType="time"/>
     </LinearLayout>
 
 
@@ -141,12 +149,14 @@
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/wed1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:hint="00시00분"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:inputType="time"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -157,12 +167,14 @@
             android:textAlignment="center" />
 
         <EditText
+            android:id="@+id/wed2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:hint="00시00분"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:inputType="time"/>
     </LinearLayout>
 
 
@@ -189,12 +201,14 @@
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/thu1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:hint="00시00분"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:inputType="time"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -205,12 +219,14 @@
             android:textAlignment="center" />
 
         <EditText
+            android:id="@+id/thu2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:hint="00시00분"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:inputType="time"/>
     </LinearLayout>
 
     <LinearLayout
@@ -236,12 +252,14 @@
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/fri1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:hint="00시00분"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:inputType="time"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -252,12 +270,14 @@
             android:textAlignment="center" />
 
         <EditText
+            android:id="@+id/fri2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:hint="00시00분"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:inputType="time"/>
     </LinearLayout>
 
     <LinearLayout
@@ -283,12 +303,14 @@
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/sat1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:hint="00시00분"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:inputType="time"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -299,12 +321,14 @@
             android:textAlignment="center" />
 
         <EditText
+            android:id="@+id/sat2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:hint="00시00분"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:inputType="time"/>
     </LinearLayout>
 
     <LinearLayout
@@ -329,12 +353,14 @@
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/sun1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:hint="00시00분"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:inputType="time"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -345,21 +371,23 @@
             android:textAlignment="center" />
 
         <EditText
+            android:id="@+id/sun2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:hint="00시00분"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:inputType="time"/>
     </LinearLayout>
 
     <Button
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="30dp"
-        android:text="다음"
-        android:id="@+id/nextbutton5"
+        android:id="@+id/endButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp"
+        android:text="설정 완료"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

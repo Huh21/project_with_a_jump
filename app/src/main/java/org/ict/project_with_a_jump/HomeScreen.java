@@ -114,7 +114,8 @@ public class HomeScreen extends Fragment {
         String uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference rootRef= FirebaseDatabase.getInstance().getReference();
 
-        DatabaseReference uidRef1= rootRef.child("project_with_a_jump").child("UserAccount:").child(uid);
+        //파이어베이스에서 시설이름 가져오기
+        DatabaseReference uidRef1= rootRef.child("project_with_a_jump").child("ManageAccount").child(uid);
         uidRef1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -133,19 +134,8 @@ public class HomeScreen extends Fragment {
             }
         });
 
-        /*
-        SharedPreferences pref= getSharedPreferences("test",MODE_PRIVATE);
-        String open_ = pref.getString("tue1","디폴트");
-        if(open_ != "디폴트") {
-            open=open_;
-        }
-        String closed_ =pref.getString("tue2", "디폴트");
-        if(closed !="디폴트") {
-            closed=closed_;
-        }
-        */
-
-        DatabaseReference uidRef2= rootRef.child("project_with_a_jump").child("UserAccount:").child(uid).child("officeHour").child(title[dayOfWeek-1]);
+        //오늘의 영업시간 가져오기
+        DatabaseReference uidRef2= rootRef.child("project_with_a_jump").child("ManageAccount").child(uid).child("officeHour").child(title[dayOfWeek-1]);
         uidRef2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -170,7 +160,6 @@ public class HomeScreen extends Fragment {
 
             }
         });
-
 
         /* Firebase에서 정보 가져오기 */
         //시설 이름

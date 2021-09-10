@@ -75,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         mFirebaseAuth = FirebaseAuth.getInstance();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("ManageAccount");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("project_with_a_jump").child("ManageAccount");
 
 
         //다음 api
@@ -101,6 +101,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String birth = birth_join.getText().toString();
                 String daum1=daum_result_join.getText().toString();
                 String daum2=daum_resultDetail_join.getText().toString();
+                String daum3= daum_result2_join.getText().toString();
                 String companyName=companyName_join.getText().toString();
 
                 //Firebase Auth 진행
@@ -117,6 +118,7 @@ public class RegisterActivity extends AppCompatActivity {
                             account.setBirth(birth);
                             account.setDaum1(daum1);
                             account.setDaum2(daum2);
+                            account.setDaum3(daum3);
                             account.setCompanyName(companyName);
 
                             //setvalue(): database에 insert(삽입)

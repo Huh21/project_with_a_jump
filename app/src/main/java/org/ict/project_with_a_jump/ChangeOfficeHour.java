@@ -152,7 +152,7 @@ public class ChangeOfficeHour extends Fragment {
 
     //값 불러오기
     public void takeInfo(EditText editText,String key){
-        SharedPreferences pref= getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences pref= getActivity().getSharedPreferences("officeTime",Context.MODE_PRIVATE);
         String result = pref.getString(key,"디폴트");
         if(result != "디폴트"){
             editText.setText(result);
@@ -161,9 +161,9 @@ public class ChangeOfficeHour extends Fragment {
         }
     }
 
-    //값 저장(한 요일의 오픈/종료 시간 한번에 저장)
+    //영업시간 수정(한 요일의 오픈/종료 시간 한번에 저장)
     public void saveInfo(String input1,String input2,String key1,String key2,String day){
-        SharedPreferences pref= getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences pref= getActivity().getSharedPreferences("officeTime",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor= pref.edit();
         editor.putString(key1,input1);
         editor.putString(key2,input2);

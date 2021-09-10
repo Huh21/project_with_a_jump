@@ -12,12 +12,21 @@ public class UserAccount
     private String birth;
     private String daum1;
     private String daum2;
+    private String daum3;
     private String companyName;
-    private String officeHour;
 
     public UserAccount() { }
 
-    public UserAccount(String companyName){
+    public UserAccount(String idToken, String emailId, String password, String name, String birth, String daum1, String daum2, String daum3, String companyName)
+    {
+        this.idToken=idToken;
+        this.emailId=emailId;
+        this.password=password;
+        this.name=name;
+        this.birth=birth;
+        this.daum1=daum1;
+        this.daum2=daum2;
+        this.daum3=daum3;
         this.companyName=companyName;
     }
 
@@ -76,6 +85,10 @@ public class UserAccount
     public void setDaum2(String daum2) {
         this.daum2 = daum2;
     }
+
+    public String getDaum3() { return daum3; }
+
+    public void setDaum3(String daum3) { this.daum3 = daum3; }
 
     public String getCompanyName() {
         return companyName;

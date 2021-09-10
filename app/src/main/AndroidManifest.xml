@@ -25,7 +25,6 @@
         <activity android:name=".WebViewActivity"></activity>
         <activity android:name=".HomeDefault" />
         <activity android:name=".Loading" />
-        <activity android:name=".RegisterActivity6" />
         <activity android:name=".RegisterActivity5" />
         <activity android:name=".RegisterActivity4" />
         <activity android:name=".RegisterActivity3" />
