@@ -1,27 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.ict.project_with_a_jump">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    // 위치 관련 권한
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    // retrofit 네트워크 통신용 권한 추가
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project_with_a_jump">
-        <activity android:name=".MainActivity">
+        <activity android:name=".HomeDefault"></activity>
+        <activity android:name=".Loading" />
+        <activity android:name=".RegisterActivity6" />
+        <activity android:name=".RegisterActivity5" />
+        <activity android:name=".RegisterActivity4" />
+        <activity android:name=".RegisterActivity3" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".HomeScreen"
+            tools:ignore="Instantiatable"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity
+            android:name=".PeriodDialog"
+            tools:ignore="Instantiatable" />
+        <activity android:name=".ChangeListableTime" />
+        <activity android:name=".ChangeOfficeHour"
+            tools:ignore="Instantiatable"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name=".PersonalInfo"
+            tools:ignore="Instantiatable"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity
+            android:name=".FragmentGraph2"
+            tools:ignore="Instantiatable"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity
+            android:name=".FragmentGraph1"
+            tools:ignore="Instantiatable"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name=".History"
+            tools:ignore="Instantiatable"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name=".SetUp" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/external" />
+        </provider>
     </application>
 
 </manifest>
