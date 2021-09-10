@@ -85,8 +85,4 @@ public class UserAccount
         this.companyName = companyName;
     }
 
-    //영업시간 추가
-    //public String getOfficeHour(){return officeHour;}
-
-    //public void setOfficeHour(String officeHour){this.officeHour=officeHour;}
 }

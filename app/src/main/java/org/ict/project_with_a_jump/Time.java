@@ -11,7 +11,7 @@ public class Time {
         this.open=open;
         this.closed=closed;
     }
-     */
+    */
 
     public String getOpen() { return open; }
     public void setOpen(String open) { this.open = open; }
