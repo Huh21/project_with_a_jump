@@ -26,7 +26,6 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     Button registerButton;
-    Button loginButton;
     private Button login;
     private EditText email_login;
     private EditText pwd_login;
@@ -36,9 +35,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Calendar cal = Calendar.getInstance();
-        int dayOfWeek= cal.get(Calendar.DAY_OF_WEEK); //1(일)~7(토)
 
         login=(Button)findViewById(R.id.login);
         email_login=(EditText) findViewById(R.id.email_login);

@@ -60,7 +60,7 @@ public class PersonalInfo extends Fragment {
         showEmailId= view.findViewById(R.id.email);
         showPassword= view.findViewById(R.id.password);
         change=view.findViewById(R.id.changePassword);
-         */
+
         mAuth= FirebaseAuth.getInstance();
         String uid = mAuth.getCurrentUser().getUid();
         rootRef= FirebaseDatabase.getInstance().getReference();
@@ -92,13 +92,13 @@ public class PersonalInfo extends Fragment {
             }
         });
 
-        /*
+
         // 툴바
         toolbar= (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        */
+
 
         //비밀번호 재설정
         change.setOnClickListener(new View.OnClickListener() {
@@ -133,6 +133,7 @@ public class PersonalInfo extends Fragment {
                 dialog.show();
             }
         });
+        */
 
     }
 

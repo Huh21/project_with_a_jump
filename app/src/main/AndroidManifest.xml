@@ -28,7 +28,6 @@
         <activity android:name=".RegisterActivity5" />
         <activity android:name=".RegisterActivity4" />
         <activity android:name=".RegisterActivity3" />
-        <activity android:name=".RegisterActivity2" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".HomeScreen"
             tools:ignore="Instantiatable"

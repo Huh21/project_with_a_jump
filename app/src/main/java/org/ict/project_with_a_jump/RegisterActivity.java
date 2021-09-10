@@ -30,7 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
     Button nextbutton;
     private EditText email_join;
     private EditText pwd_join;
-    private EditText name_join, birth_join, daum_resultDetail_join, companyNmae_join;
+    private EditText name_join, birth_join, daum_resultDetail_join, companyName_join;
     private TextView daum_result_join;
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference mDatabaseRef;
@@ -46,7 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
         birth_join = (EditText) findViewById(R.id.birth_join2);
         daum_result_join=(TextView) findViewById(R.id.daum_result_join);
         daum_resultDetail_join=(EditText) findViewById(R.id.daum_resultDetail_join);
-        companyNmae_join=(EditText) findViewById(R.id.companyName_join);
+        companyName_join=(EditText) findViewById(R.id.companyName_join);
         nextbutton = findViewById(R.id.nextbutton);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -62,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String birth = birth_join.getText().toString();
                 String daum1=daum_result_join.getText().toString();
                 String daum2=daum_resultDetail_join.getText().toString();
-                String companyName=companyNmae_join.getText().toString();
+                String companyName=companyName_join.getText().toString();
 
                 //Firebase Auth 진행
                 mFirebaseAuth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {

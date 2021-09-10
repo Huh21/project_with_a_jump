@@ -260,11 +260,11 @@
                     android:textColor="@color/black" />
 
                 <EditText
+                    android:id="@+id/companyName_join"
                     android:layout_width="600dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="시설 이름을 입력하세요."
-                    android:id="@+id/companyNmae_join" />
+                    android:hint="시설 이름을 입력하세요."/>
             </LinearLayout>
 
 
