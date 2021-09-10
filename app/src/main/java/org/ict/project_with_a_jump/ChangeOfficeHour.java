@@ -141,11 +141,11 @@ public class ChangeOfficeHour extends Fragment {
                 days[13]=sun2.getText().toString();
 
                 for(int i=0; i<days.length; i+=2) {
-                    if(days[i] != null){ //입력된 값이 있다면
+                    if((days[i] != null)&&(days[i+1] != null)){
                         saveInfo(days[i],days[i+1],dayName[i],dayName[i+1],title[i/2]);
                     }
                 }
-                Toast.makeText(getContext(),"저장되었습니다.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"영업시간이 변경되었습니다.",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -186,4 +186,5 @@ public class ChangeOfficeHour extends Fragment {
         }
         */
     }
+
 }

@@ -82,11 +82,11 @@ public class RegisterActivity5 extends AppCompatActivity {
                 days[13]=sun2.getText().toString();
 
                 for(int i=0; i<days.length; i+=2) {
-                    if(days[i] != null){ //입력된 값이 있다면
+                    if((days[i] != null)&&(days[i+1] != null)){
                         saveInfo(days[i],days[i+1],dayName[i],dayName[i+1],title[i/2]);
                     }
                 }
-                Toast.makeText(getApplicationContext(),"영업시간이 저장되었습니다.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"영업시간이 설정되었습니다.",Toast.LENGTH_SHORT).show();
 
                 /* 로그인 화면으로 돌아가기 */
                 Intent intent=new Intent(RegisterActivity5.this, MainActivity.class);
