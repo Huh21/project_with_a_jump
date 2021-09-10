@@ -5,9 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+
 public class MainActivity2 extends AppCompatActivity {
+
+    private DatabaseReference mDatabaseRef; //실시간 데이터베이스
+    private Button mBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
