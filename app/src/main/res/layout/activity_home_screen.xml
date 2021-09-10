@@ -7,27 +7,6 @@
     android:orientation="vertical"
     tools:context=".HomeScreen">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#DEE2E3"
-        android:elevation="1dp"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="홈화면"
-
-            android:textColor="#000000"
-            android:textSize="30dp" />
-
-    </androidx.appcompat.widget.Toolbar>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

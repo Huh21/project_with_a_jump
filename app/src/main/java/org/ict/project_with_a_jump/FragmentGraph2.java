@@ -25,6 +25,11 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,20 +38,21 @@ import java.util.SortedMap;
 
 public class FragmentGraph2 extends Fragment implements View.OnClickListener{
     Button button;
-    private PeriodDialog periodDialog;
     TextView term;
-
-    int[] pickedValues= new int[4];
 
     private LineChart lineChart;
 
-    ArrayList values= new ArrayList(); //그래프 데이터 값
-    ArrayList days= new ArrayList(); //그래프 x축 라벨
+    ArrayList values = new ArrayList(); //그래프 데이터 값
+    ArrayList days = new ArrayList(); //그래프 x축 라벨
 
-    @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-    }
+    DatabaseReference uidRef1;
+
+    String findDate=null;
+    String writeDate=null;
+
+    int y,m;
+    int monthSum=0;
+    int index;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -54,71 +60,171 @@ public class FragmentGraph2 extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-
-        button= view.findViewById(R.id.chooseTerm);
+        button = view.findViewById(R.id.chooseTerm);
         button.setOnClickListener(this);
 
+        lineChart = view.findViewById(R.id.lineChart);
+
         //기간 기본 설정
-        term=view.findViewById(R.id.term);
-        Calendar cal= Calendar.getInstance();
-        int nowYear= cal.get(Calendar.YEAR);
-        int nowMonth= cal.get(Calendar.MONTH);
-        int startYear= cal.get(Calendar.YEAR)-1;
-        int startMonth= cal.get(Calendar.MONTH)+1;
+        term = view.findViewById(R.id.term);
+        Calendar cal = Calendar.getInstance();
+        int startYear = cal.get(Calendar.YEAR) - 1;
+        int startMonth = cal.get(Calendar.MONTH);
+        int endYear = cal.get(Calendar.YEAR);
+        int endMonth = cal.get(Calendar.MONTH);
 
-        String str1= startYear+"년 "+startMonth+"월~";
-        String str2= nowYear+"년 "+nowMonth+"월";
-        term.setText(str1+str2);
+        String str1 = startYear + "년 " + startMonth + "월";
+        String str2 = endYear + "년 " + endMonth + "월";
+        term.setText("선택된 기간: " + str1 + "~" + str2);
 
-        /* 월별 그래프 */
-        SimpleDateFormat sdf= new SimpleDateFormat("yyyy/MM");
-        int y,m;
-        y=pickedValues[0];
-        m=pickedValues[1];
-        while((y<pickedValues[2]) || ((y==pickedValues[2])&&(m<=pickedValues[3]))){
-            Calendar cal1= Calendar.getInstance();
-            cal1.set(Calendar.YEAR, y);
-            cal1.set(Calendar.MONTH, m);
-            String xLabel= sdf.format(cal1.getTime());
-            days.add(xLabel);
-            m++;
+        /* 월별 데이터 가져와서 그래프 그리기 */
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        uidRef1 = rootRef.child("ManageList").child("국민떡볶이 덕성여대점");
 
-            if(m>=13){
-                m=1;
-                y+=1;
-            }
-        }
-
-
-
-
-        //x축 라벨 년도/월로 바꾸기
-        ValueFormatter selectedTerm= new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                return ""+(int)value;
-            }
-        };
-        //xAxis.setValueFormatter(selectedTerm);
-
-
+        initialize();
+        showMonthChart(startYear,startMonth,endYear,endMonth);
     }
 
-    //버튼 누르면 다이얼로그 뜸
+    //'기간 선택' 버튼 누르면 다이얼로그 뜸
     @Override
     public void onClick(View view) {
-        periodDialog=new PeriodDialog(getContext(), new PeriodDialog.PeriodDialogListener() {
+        PeriodDialog periodDialog = new PeriodDialog(getContext(), new PeriodDialog.PeriodDialogListener() {
             @Override
             public void close(int startYear, int startMonth, int endYear, int endMonth) {
-                pickedValues[0]=startYear;
-                pickedValues[1]=startMonth;
-                pickedValues[2]=endYear;
-                pickedValues[3]=endMonth;
+                initialize();
+                //선택된 값으로 그래프 그리기
+                showMonthChart(startYear,startMonth,endYear,endMonth);
             }
         });
         //periodDialog.setCancelable(true);
         periodDialog.setUpTerm(term);
+    }
+
+    /* 그래프 그리기 */
+    public void showMonthChart(int firstYear, int firstMonth, int lastYear, int lastMonth) {
+        //days.add(""); //x축 라벨 추가
+        index=0;
+
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy년MM월");
+
+        //Calendar cal1 = Calendar.getInstance();
+        y = firstYear; //2021
+        m = firstMonth; //08
+
+        Calendar cal= Calendar.getInstance();
+
+        //해당 기간동안 데이터 가져오기 반복
+        while ((y < lastYear) || ((y == lastYear) && (m <= lastMonth))) {
+            cal.set(Calendar.YEAR,y);
+            cal.set(Calendar.MONTH,m-1);
+
+            findDate= sdf2.format(cal.getTime());
+            writeDate= sdf1.format(cal.getTime());
+
+            days.add(writeDate); //x축 라벨 추가
+            uidRef1.child(findDate).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if(snapshot.hasChildren()){
+                        //'oooo년oo월'의 모든 일을 돌아가며 총합 계산
+                        for(DataSnapshot myDataSnapshot : snapshot.getChildren()){
+                            long count= myDataSnapshot.getChildrenCount();
+                            monthSum+=count;
+                        }
+                        values.add(new BarEntry(monthSum, index)); //데이터 값 추가
+                        drawChart(values,days);
+                        monthSum=0;
+                        index++;
+                    }else {
+                        values.add(new BarEntry(0, index)); //데이터 값 추가
+                        drawChart(values, days);
+                        index++;
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+
+                }
+            });
+
+            m++;
+            if (m >= 13) {
+                m = 1;
+                y += 1;
+            }
+
+            cal.clear(Calendar.YEAR);
+            cal.clear(Calendar.MONTH);
+        }
+    }
+
+    //values와 days로 라인 그래프 그리기
+    public void drawChart(ArrayList values, ArrayList days){
+
+        LineDataSet lineDataSet = new LineDataSet(values, "월별 방문자 수");
+        lineDataSet.setCircleColor(Color.BLUE); //그래프 포인트(?값) 색
+        lineDataSet.setColor(Color.BLUE); //그래프 색
+        lineDataSet.setCircleSize(3.5f);
+        lineDataSet.setValueTextColor(Color.BLACK);
+        lineDataSet.setValueTextSize(16f);
+        lineDataSet.setLineWidth(2f);
+
+        LineData lineData = new LineData(days, lineDataSet);
+        lineChart.setData(lineData);
+        //lineChart.animateXY(5000,5000);
+
+        //데이터값 float->int
+        ValueFormatter vf = new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                return "" + (int) value;
+            }
+        };
+        lineData.setValueFormatter(vf);
+
+        XAxis xAxis= lineChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextColor(Color.BLACK);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setDrawLabels(true);
+        xAxis.setLabelsToSkip(0);
+        xAxis.setTextSize(12f);
+        //xAxis.setAxisMinValue(0);
+        //xAxis.setAxisMaxValue(6);
+        //xAxis.setAvoidFirstLastClipping(true);
+
+        //오른쪽 y축 비활성화
+        YAxis yAxisRight = lineChart.getAxisRight();
+        yAxisRight.setDrawLabels(false);
+        yAxisRight.setDrawAxisLine(false);
+        yAxisRight.setDrawGridLines(false);
+        //yAxisRight.setAxisMaxValue(20f);
+        //yAxisRight.setAxisMinValue(20f);
+
+        lineChart.setDrawGridBackground(false);
+        lineChart.setTouchEnabled(true); //차트 터치x
+        lineChart.setPinchZoom(false);
+        lineChart.setVisibleXRange(5,5);
+        //lineChart.moveViewToX();
+        lineChart.setExtraOffsets(5f,10f,20f,15f);
+        //lineChart.setExtraLeftOffset(15f);
+        //lineChart.setExtraRightOffset(15f);
+        lineChart.moveViewToX(1);
+        lineChart.setDescription("년도/월");
+        lineChart.setDescriptionTextSize(12f);
+        lineChart.invalidate();
+    }
+
+    //기존 그래프 초기화
+    public void initialize(){
+        values.clear();
+        days.clear();
+        lineChart.invalidate();
+        lineChart.clear();
     }
 }

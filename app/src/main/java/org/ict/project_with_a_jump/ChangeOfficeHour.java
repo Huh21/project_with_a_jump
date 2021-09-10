@@ -1,15 +1,21 @@
 package org.ict.project_with_a_jump;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,9 +35,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
-public class ChangeOfficeHour extends AppCompatActivity {
+public class ChangeOfficeHour extends Fragment {
     Toolbar toolbar;
-
     Button save;
     EditText mon1, mon2;
     EditText tue1, tue2;
@@ -41,42 +46,49 @@ public class ChangeOfficeHour extends AppCompatActivity {
     EditText sat1, sat2;
     EditText sun1, sun2;
 
-    TextView last;
-
     String[] days= new String[14];
     String[] dayName= {"mon1","mon2","tue1","tue2","wed1","wed2","thu1","thu2","fri1","fri2","sat1","sat2","sun1","sun2"};
     String[] title={"mon","tue","wed","thu","fri","sat","sun"};
 
-    private String OPEN;
-    private String CLOSE;
-
-    Date date=null;
-    Date nowTime=null;
-
     DatabaseReference rootRef;
     DatabaseReference uidRef;
 
+    /*
+    // 툴바에 뒤로가기 버튼 설정
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(item.getItemId()==android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    */
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_change_office_hour);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        return inflater.inflate(R.layout.activity_change_office_hour,container,false);
+    }
 
-        save= (Button)findViewById(R.id.save);
-        mon1= (EditText)findViewById(R.id.mon1);
-        mon2= (EditText)findViewById(R.id.mon2);
-        tue1= (EditText)findViewById(R.id.tue1);
-        tue2= (EditText)findViewById(R.id.tue2);
-        wed1= (EditText)findViewById(R.id.wed1);
-        wed2= (EditText)findViewById(R.id.wed2);
-        thu1= (EditText)findViewById(R.id.thu1);
-        thu2= (EditText)findViewById(R.id.thu2);
-        fri1= (EditText)findViewById(R.id.fri1);
-        fri2= (EditText)findViewById(R.id.fri2);
-        sat1= (EditText)findViewById(R.id.sat1);
-        sat2= (EditText)findViewById(R.id.sat2);
-        sun1= (EditText)findViewById(R.id.sun1);
-        sun2= (EditText)findViewById(R.id.sun2);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
+
+        save= view.findViewById(R.id.save);
+        mon1= view.findViewById(R.id.mon1);
+        mon2= view.findViewById(R.id.mon2);
+        tue1= view.findViewById(R.id.tue1);
+        tue2= view.findViewById(R.id.tue2);
+        wed1= view.findViewById(R.id.wed1);
+        wed2= view.findViewById(R.id.wed2);
+        thu1= view.findViewById(R.id.thu1);
+        thu2= view.findViewById(R.id.thu2);
+        fri1= view.findViewById(R.id.fri1);
+        fri2= view.findViewById(R.id.fri2);
+        sat1= view.findViewById(R.id.sat1);
+        sat2= view.findViewById(R.id.sat2);
+        sun1= view.findViewById(R.id.sun1);
+        sun2= view.findViewById(R.id.sun2);
 
         //있는 값 불러오기
         takeInfo(mon1,dayName[0]);
@@ -94,13 +106,13 @@ public class ChangeOfficeHour extends AppCompatActivity {
         takeInfo(sun1,dayName[12]);
         takeInfo(sun2,dayName[13]);
 
-
+        /*
         // 툴바
         toolbar= (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        */
 
         //저장 버튼을 누르면 SharedPreferences에 값 저장
         save.setOnClickListener(new View.OnClickListener() {
@@ -133,28 +145,25 @@ public class ChangeOfficeHour extends AppCompatActivity {
                         saveInfo(days[i],days[i+1],dayName[i],dayName[i+1],title[i/2]);
                     }
                 }
-                Toast.makeText(getApplicationContext(),"저장되었습니다.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"저장되었습니다.",Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
-    // 툴바에 뒤로가기 버튼 설정
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        if(item.getItemId()==android.R.id.home){
-            finish();
-            return true;
+    //값 불러오기
+    public void takeInfo(EditText editText,String key){
+        SharedPreferences pref= getActivity().getPreferences(Context.MODE_PRIVATE);
+        String result = pref.getString(key,"디폴트");
+        if(result != "디폴트"){
+            editText.setText(result);
+        }else{ //해당 키 값이 없을 경우(=저장된 데이터가 없을 경우)
+            editText.setText("");
         }
-        return super.onOptionsItemSelected(item);
     }
 
     //값 저장(한 요일의 오픈/종료 시간 한번에 저장)
     public void saveInfo(String input1,String input2,String key1,String key2,String day){
-        //Toast.makeText(this,input1+" 저장할게~",Toast.LENGTH_SHORT).show();
-        //Toast.makeText(this,input2+" 저장할게~",Toast.LENGTH_SHORT).show();
-        SharedPreferences pref= getSharedPreferences("test",MODE_PRIVATE);
+        SharedPreferences pref= getActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor= pref.edit();
         editor.putString(key1,input1);
         editor.putString(key2,input2);
@@ -177,16 +186,4 @@ public class ChangeOfficeHour extends AppCompatActivity {
         }
         */
     }
-
-    //값 불러오기
-    public void takeInfo(EditText editText,String key){
-        SharedPreferences pref= getSharedPreferences("test",MODE_PRIVATE);
-        String result = pref.getString(key,"디폴트");
-        if(result!="디폴트"){
-            editText.setText(result);
-        }else{ //해당 키 값이 없을 경우(=저장된 데이터가 없을 경우)
-
-        }
-    }
-
 }

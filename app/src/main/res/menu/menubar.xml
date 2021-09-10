@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/home"
+        android:title="홈"
+        android:icon="@drawable/homepage"
+        android:enabled="true"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/work"
+        android:title="영업시간"
+        android:icon="@drawable/clock"
+        android:enabled="true"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/history"
+        android:title="기록"
+        android:icon="@drawable/graph"
+        android:enabled="true"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/info"
+        android:title="계정"
+        android:icon="@drawable/user"
+        android:enabled="true"
+        android:checkable="true"
+        app:showAsAction="always"/>
+</menu>

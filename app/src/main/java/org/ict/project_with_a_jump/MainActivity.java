@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    Intent intent = new Intent(MainActivity.this, HomeScreen.class);
+                                    Intent intent = new Intent(MainActivity.this, HomeDefault.class);
                                     startActivity(intent);
                                 } else {
                                     Toast.makeText(MainActivity.this, "로그인 오류", Toast.LENGTH_SHORT).show();

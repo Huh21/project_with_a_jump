@@ -1,12 +1,17 @@
 package org.ict.project_with_a_jump;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.hardware.usb.UsbRequest;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,7 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class HomeScreen extends AppCompatActivity {
+public class HomeScreen extends Fragment {
     //영업시간 설정
     //private static final String OPEN = "8:00:00";
     //private static final String CLOSE = "22:00:00";
@@ -72,20 +77,31 @@ public class HomeScreen extends AppCompatActivity {
 
     String open, closed;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        startActivity(new Intent(this,Loading.class));
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_screen);
+    private Activity myActivity;
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        return inflater.inflate(R.layout.activity_home_screen,container,false);
+    }
+
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+        myActivity=activity;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        //startActivity(new Intent(getContext(), Loading.class));
+        super.onViewCreated(view, savedInstanceState);
 
         /* findViewById */
-        clock1=(TextView)findViewById(R.id.nowTime1);
-        clock2=(TextView)findViewById(R.id.nowTime2);
+        clock1=view.findViewById(R.id.nowTime1);
+        clock2=view.findViewById(R.id.nowTime2);
 
-        placeName= (TextView)findViewById(R.id.name);
-        officeHour= (TextView)findViewById(R.id.officeHour);
-        state= (TextView)findViewById(R.id.state);
+        placeName= view.findViewById(R.id.name);
+        officeHour= view.findViewById(R.id.officeHour);
+        state= view.findViewById(R.id.state);
 
         /* 오늘 날짜, 시간 */
         Calendar cal=Calendar.getInstance();
@@ -127,8 +143,7 @@ public class HomeScreen extends AppCompatActivity {
         if(closed !="디폴트") {
             closed=closed_;
         }
-
-         */
+        */
 
         DatabaseReference uidRef2= rootRef.child("project_with_a_jump").child("UserAccount:").child(uid).child("officeHour").child(title[dayOfWeek-1]);
         uidRef2.addValueEventListener(new ValueEventListener() {
@@ -156,7 +171,7 @@ public class HomeScreen extends AppCompatActivity {
             }
         });
 
-        
+
         /* Firebase에서 정보 가져오기 */
         //시설 이름
         //Intent receive_intent= getIntent();
@@ -174,7 +189,7 @@ public class HomeScreen extends AppCompatActivity {
                 while (!Thread.interrupted())
                     try {
                         Thread.sleep(1);
-                        runOnUiThread(new Runnable() {
+                        myActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 clock2.setText(getNowTime(sdf3)); //변하는 현재 시각 세팅
@@ -189,17 +204,17 @@ public class HomeScreen extends AppCompatActivity {
         });
         th.start();
 
-        /* 툴바 */
-        toolbar= (Toolbar)findViewById(R.id.toolbar);
+        /*
+        // 툴바
+        toolbar= view.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         //getActionBar().setDisplayShowTitleEnabled(false);
-
+        */
 
         clock1.setText(dateString);
-
-
     }
+
 
     //sdf 형식으로 현재시간 가져오기
     public String getNowTime(SimpleDateFormat sdf) {
@@ -210,7 +225,6 @@ public class HomeScreen extends AppCompatActivity {
 
     //현재시간,영업시간 비교하기
     public void showMessage(SimpleDateFormat sdf, String nowString){
-
         //시간 비교를 위해 String 타입의 시간->Date 타입으로 바꾸기
         try{
             nowTime= sdf.parse(nowString);
@@ -244,10 +258,9 @@ public class HomeScreen extends AppCompatActivity {
         }else{
             state.setText("영업 시작 시간과 종료 시간을 모두 입력해주세요.");
         }
-
-
     }
 
+    /*
     // 옵션 메뉴 관련 메소드
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -269,11 +282,11 @@ public class HomeScreen extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
+    */
 
     //오늘의 영업시간 불러오기
     public void takeInfo(EditText editText,String key){
-        SharedPreferences pref= getSharedPreferences("test",MODE_PRIVATE);
+        SharedPreferences pref= this.getActivity().getSharedPreferences("test", Context.MODE_PRIVATE);
         String result = pref.getString(key,"디폴트");
         if(result!="디폴트"){
             editText.setText(result);

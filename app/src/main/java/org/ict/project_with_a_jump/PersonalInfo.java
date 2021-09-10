@@ -1,16 +1,20 @@
 package org.ict.project_with_a_jump;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,10 +33,7 @@ import org.w3c.dom.Text;
 
 import java.nio.channels.AlreadyBoundException;
 
-public class PersonalInfo extends AppCompatActivity {
-    Toolbar toolbar;
-
-    //유종: set 시설 이름
+public class PersonalInfo extends Fragment {
     DatabaseReference rootRef;
     DatabaseReference uidRef;
 
@@ -45,19 +46,21 @@ public class PersonalInfo extends AppCompatActivity {
 
     FirebaseAuth mAuth;
 
-    Context context;
-
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        return inflater.inflate(R.layout.activity_personal_info,container,false);
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_personal_info);
-
-        showName= (TextView)findViewById(R.id.name);
-        showBirth= (TextView)findViewById(R.id.birth);
-        showEmailId= (TextView)findViewById(R.id.email);
-        showPassword= (TextView)findViewById(R.id.password);
-
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
+        /*
+        showName= view.findViewById(R.id.name);
+        showBirth= view.findViewById(R.id.birth);
+        showEmailId= view.findViewById(R.id.email);
+        showPassword= view.findViewById(R.id.password);
+        change=view.findViewById(R.id.changePassword);
+         */
         mAuth= FirebaseAuth.getInstance();
         String uid = mAuth.getCurrentUser().getUid();
         rootRef= FirebaseDatabase.getInstance().getReference();
@@ -89,21 +92,22 @@ public class PersonalInfo extends AppCompatActivity {
             }
         });
 
-
+        /*
         // 툴바
         toolbar= (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        */
 
         //비밀번호 재설정
-        change=(Button)findViewById(R.id.changePassword);
         change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final EditText editText= new EditText(getApplicationContext());
+                final EditText editText= new EditText(getContext());
 
-                AlertDialog.Builder dialog= new AlertDialog.Builder(PersonalInfo.this);
+                //AlertDialog.Builder dialog= new AlertDialog.Builder(PersonalInfo.this);
+                AlertDialog.Builder dialog= new AlertDialog.Builder(getContext());
                 dialog.setTitle("비밀번호 재설정");
                 dialog.setMessage("이메일을 입력해주세요.");
                 dialog.setView(editText);
@@ -116,12 +120,12 @@ public class PersonalInfo extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()){
-                                        Toast.makeText(getApplicationContext(), "이메일을 보냈습니다.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "이메일을 보냈습니다.", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
                         }else{
-                            Toast.makeText(getApplicationContext(), "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -132,6 +136,7 @@ public class PersonalInfo extends AppCompatActivity {
 
     }
 
+    /*
     // 툴바에 뒤로가기 버튼 설정
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -141,5 +146,6 @@ public class PersonalInfo extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    */
 
 }
