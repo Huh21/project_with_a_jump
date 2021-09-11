@@ -1,27 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.ict.project_with_a_jump">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    // 데베 관련 권한
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     // 위치 관련 권한
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    // retrofit 네트워크 통신용 권한 추가
+
+    // 인증 관련 권한
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
+
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Project_with_a_jump">
-        <activity android:name=".MainActivity">
+        android:theme="@style/Theme.Project_with_a_jump"
+        android:usesCleartextTraffic="true">
+
+        // 앱 최초 실행 시 초기 화면
+        <activity android:name=".InitActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        // 사용자 홈 화면
+        <activity android:name=".MainActivity"></activity>
+
+        // 본인인증 화면
+        <activity android:name=".CertifyActivity"></activity>
+        <activity android:name=".CertifyActivity2"></activity>
+        <activity android:name=".SubActivity"></activity>
+
+        // 출입명부 화면
+        <activity android:name=".EntryActivity"></activity>
+        <activity android:name=".EntryActivity2"></activity>
+
+        // 사업자 화면
+        <activity android:name=".MainActivity2"></activity>
+        <activity android:name=".WebViewActivity"></activity>
+        <activity android:name=".HomeDefault" />
+        <activity android:name=".Loading" />
+        <activity android:name=".RegisterActivity5" />
+        <activity android:name=".RegisterActivity4" />
+        <activity android:name=".RegisterActivity3" />
+        <activity android:name=".RegisterActivity" />
+        <activity
+            android:name=".HomeScreen"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".PeriodDialog"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".ChangeOfficeHour"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".PersonalInfo"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".FragmentGraph2"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".FragmentGraph1"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".History"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            tools:ignore="Instantiatable" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/external" />
+        </provider>
+
     </application>
 
 </manifest>
