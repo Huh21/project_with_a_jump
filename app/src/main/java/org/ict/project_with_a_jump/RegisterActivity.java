@@ -1,22 +1,16 @@
 package org.ict.project_with_a_jump;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,34 +20,21 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import android.net.http.SslError;
-import android.os.Handler;
-import android.os.Message;
-import android.webkit.JavascriptInterface;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import java.util.Random;
-
 import org.jetbrains.annotations.NotNull;
 
 public class RegisterActivity extends AppCompatActivity {
+    //인증번호
+    static final int SMS_SEND_PERMISSOW = 1;
+    //다음 api
+    private static final int SEARCH_ADDRESS_ACTIVITY = 10000;
     Button nextbutton, registerbutton, authentication, authenticationCheck;
+    String checkNum;
     private EditText email_join, pwd_join;
     private EditText phoneNumberAccess, Access;
     private EditText name_join, birth_join, daum_resultDetail_join, companyName_join;
-    private TextView daum_result_join,daum_result2_join;
+    private TextView daum_result_join, daum_result2_join;
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference mDatabaseRef;
-
-    //다음 api
-    private static final int SEARCH_ADDRESS_ACTIVITY = 10000;
-    //인증번호
-    static final int SMS_SEND_PERMISSOW = 1;
-    String checkNum;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +45,10 @@ public class RegisterActivity extends AppCompatActivity {
         pwd_join = (EditText) findViewById(R.id.pwd_join);
         name_join = (EditText) findViewById(R.id.name_join);
         birth_join = (EditText) findViewById(R.id.birth_join2);
-        daum_result_join=(TextView) findViewById(R.id.daum_result_join);
-        daum_result2_join=(TextView) findViewById(R.id.daum_result2_join);
-        daum_resultDetail_join=(EditText) findViewById(R.id.daum_resultDetail_join);
-        companyName_join=(EditText) findViewById(R.id.companyName_join);
+        daum_result_join = (TextView) findViewById(R.id.daum_result_join);
+        daum_result2_join = (TextView) findViewById(R.id.daum_result2_join);
+        daum_resultDetail_join = (EditText) findViewById(R.id.daum_resultDetail_join);
+        companyName_join = (EditText) findViewById(R.id.companyName_join);
         registerbutton = findViewById(R.id.registerbutton);
         nextbutton = findViewById(R.id.nextbutton);
         authentication = findViewById(R.id.authentication);
@@ -82,8 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (daum_result_join != null) {
             daum_result_join.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v)
-                {
+                public void onClick(View v) {
                     Intent i = new Intent(RegisterActivity.this, WebViewActivity.class);
                     startActivityForResult(i, SEARCH_ADDRESS_ACTIVITY);
                 }
@@ -99,10 +79,10 @@ public class RegisterActivity extends AppCompatActivity {
                 String pwd = pwd_join.getText().toString();
                 String name = name_join.getText().toString();
                 String birth = birth_join.getText().toString();
-                String daum1=daum_result_join.getText().toString();
-                String daum2=daum_resultDetail_join.getText().toString();
-                String daum3= daum_result2_join.getText().toString();
-                String companyName=companyName_join.getText().toString();
+                String daum1 = daum_result_join.getText().toString();
+                String daum2 = daum_resultDetail_join.getText().toString();
+                String daum3 = daum_result2_join.getText().toString();
+                String companyName = companyName_join.getText().toString();
 
                 //Firebase Auth 진행
                 mFirebaseAuth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
@@ -110,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
-                            UserAccount account = new UserAccount();
+                            Manage account = new Manage();
                             account.setIdToken(firebaseUser.getUid());
                             account.setEmailId(firebaseUser.getEmail());
                             account.setPassword(pwd);
@@ -136,7 +116,6 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         });
-
 
 
 //        문자 보내기 권한 확인 (코드 구현중!!!)
@@ -166,7 +145,6 @@ public class RegisterActivity extends AppCompatActivity {
 //                Toast.makeText(getApplicationContext(),"인증번호를 확인하였습니다",Toast.LENGTH_SHORT).show();
 //            }
 //        });
-
 
 
         //!!!!파베 이미지 업로드할 때 데이터 전달
@@ -226,20 +204,19 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     //다음 api
-    public void onActivityResult(int requestCode, int resultCode, Intent intent)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         switch (requestCode) {
             case SEARCH_ADDRESS_ACTIVITY:
                 if (resultCode == RESULT_OK) {
                     String data = intent.getExtras().getString("data");
-                    Log.d("data",data);
+                    Log.d("data", data);
                     int idx = data.indexOf(",");
                     //data2 = 우편번호
-                    String data2 = data.substring(0,idx);
-                    Log.d("data2",data2);
-                    String cutData = data.substring(idx+1).trim();
-                    Log.d("cutData",cutData);
+                    String data2 = data.substring(0, idx);
+                    Log.d("data2", data2);
+                    String cutData = data.substring(idx + 1).trim();
+                    Log.d("cutData", cutData);
                     if (data != null) {
                         daum_result_join.setText(cutData);
                         daum_result2_join.setText(data2);

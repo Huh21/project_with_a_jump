@@ -12,12 +12,21 @@ public class FirebasePost {
         // Default constructor required for calls to DataSnapshot.getValue(FirebasePost.class)
     }
 
+    public FirebasePost(String date, String name1, String phonenumber, String home, String agree, String temperature) {
+        this.date = date;
+        this.name1 = name1;
+        this.phonenumber = phonenumber;
+        this.home = home;
+        this.agree = agree;
+        this.temperature = temperature;
+    }
+
     public String getDate() {
         return date;
     }
 
     public void setDate(String date) {
-        this.date=date;
+        this.date = date;
     }
 
     public String getName1() {
@@ -25,15 +34,15 @@ public class FirebasePost {
     }
 
     public void setName1(String Name1) {
-        this.name1= name1;
+        this.name1 = name1;
     }
 
-    public String getphonenumber(){
+    public String getphonenumber() {
         return phonenumber;
     }
 
     public void setphonenumber(String phonenumber) {
-        this.phonenumber=phonenumber;
+        this.phonenumber = phonenumber;
     }
 
     public String gethome() {
@@ -41,7 +50,7 @@ public class FirebasePost {
     }
 
     public void sethome(String home) {
-        this.home=home;
+        this.home = home;
     }
 
     public String getagree() {
@@ -49,24 +58,15 @@ public class FirebasePost {
     }
 
     public void setagree(String agree) {
-        this.agree=agree;
+        this.agree = agree;
     }
 
     public void settemperature(String temperature) {
-        this.temperature=temperature;
+        this.temperature = temperature;
     }
 
     public String gettemperature() {
         return temperature;
-    }
-
-    public FirebasePost(String date, String name1, String phonenumber, String home, String agree, String temperature){
-        this.date=date;
-        this.name1=name1;
-        this.phonenumber=phonenumber;
-        this.home=home;
-        this.agree=agree;
-        this.temperature=temperature;
     }
 
 }

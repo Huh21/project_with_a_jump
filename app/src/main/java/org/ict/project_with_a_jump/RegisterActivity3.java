@@ -1,10 +1,5 @@
 package org.ict.project_with_a_jump;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import androidx.core.content.FileProvider;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,16 +13,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
@@ -46,10 +41,10 @@ public class RegisterActivity3 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register3);
 
-        imageView=findViewById(R.id.imageView);
+        imageView = findViewById(R.id.imageView);
 
         //takepicture메서드 실행
-        Button picturebutton=findViewById(R.id.picturebutton);
+        Button picturebutton = findViewById(R.id.picturebutton);
         picturebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,11 +53,11 @@ public class RegisterActivity3 extends AppCompatActivity {
         });
 
         //화면전환
-        nextbutton3=findViewById(R.id.nextbutton3);
+        nextbutton3 = findViewById(R.id.nextbutton3);
         nextbutton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(RegisterActivity3.this, RegisterActivity4.class);
+                Intent intent = new Intent(RegisterActivity3.this, RegisterActivity4.class);
                 startActivity(intent);
             }
         });
@@ -70,16 +65,15 @@ public class RegisterActivity3 extends AppCompatActivity {
     }
 
 
-
     //미리보기 이미지 가져오기
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data ){
-        super.onActivityResult(requestCode,resultCode,data);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode==101 && resultCode==RESULT_OK) {
-            BitmapFactory.Options options=new BitmapFactory.Options();
-            options.inSampleSize=8;
-            Bitmap bitmap=BitmapFactory.decodeFile(file.getAbsolutePath(),options);
+        if (requestCode == 101 && resultCode == RESULT_OK) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 8;
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 
             imageView.setImageBitmap(bitmap);
 
@@ -125,7 +119,7 @@ public class RegisterActivity3 extends AppCompatActivity {
     public void takePicture() {
         try { //에러가 발생할 수 있는 코드
 
-            file=createFile();
+            file = createFile();
             if (file.exists()) {
                 file.delete();
             }
@@ -138,23 +132,23 @@ public class RegisterActivity3 extends AppCompatActivity {
         }
 
         Uri uri;
-        if(Build.VERSION.SDK_INT>=24) {
-            uri= FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, file);
+        if (Build.VERSION.SDK_INT >= 24) {
+            uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, file);
         } else {
-            uri= Uri.fromFile(file);
+            uri = Uri.fromFile(file);
         }
 
-        Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,uri);
-        startActivityForResult(intent,101);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        startActivityForResult(intent, 101);
     }
 
 
     private File createFile() {
-        String filename="capture.jpg";
-        File outFile=new File(getFilesDir(),filename);
-        Log.d("Main","File path:"+outFile.getAbsolutePath());
+        String filename = "capture.jpg";
+        File outFile = new File(getFilesDir(), filename);
+        Log.d("Main", "File path:" + outFile.getAbsolutePath());
 
         return outFile;
     }

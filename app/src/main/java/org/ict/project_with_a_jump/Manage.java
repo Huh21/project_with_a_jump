@@ -3,8 +3,7 @@ package org.ict.project_with_a_jump;
 /**
  * 사용자 계정 정보 모델 클래스
  */
-public class UserAccount
-{
+public class Manage {
     private String idToken;     //Firebase Uid(고유 토큰정보)
     private String emailId;
     private String password;
@@ -15,19 +14,19 @@ public class UserAccount
     private String daum3;
     private String companyName;
 
-    public UserAccount() { }
+    public Manage() {
+    }
 
-    public UserAccount(String idToken, String emailId, String password, String name, String birth, String daum1, String daum2, String daum3, String companyName)
-    {
-        this.idToken=idToken;
-        this.emailId=emailId;
-        this.password=password;
-        this.name=name;
-        this.birth=birth;
-        this.daum1=daum1;
-        this.daum2=daum2;
-        this.daum3=daum3;
-        this.companyName=companyName;
+    public Manage(String idToken, String emailId, String password, String name, String birth, String daum1, String daum2, String daum3, String companyName) {
+        this.idToken = idToken;
+        this.emailId = emailId;
+        this.password = password;
+        this.name = name;
+        this.birth = birth;
+        this.daum1 = daum1;
+        this.daum2 = daum2;
+        this.daum3 = daum3;
+        this.companyName = companyName;
     }
 
     public String getIdToken() {
@@ -86,9 +85,13 @@ public class UserAccount
         this.daum2 = daum2;
     }
 
-    public String getDaum3() { return daum3; }
+    public String getDaum3() {
+        return daum3;
+    }
 
-    public void setDaum3(String daum3) { this.daum3 = daum3; }
+    public void setDaum3(String daum3) {
+        this.daum3 = daum3;
+    }
 
     public String getCompanyName() {
         return companyName;

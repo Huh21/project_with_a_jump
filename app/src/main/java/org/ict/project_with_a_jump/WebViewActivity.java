@@ -1,35 +1,16 @@
 package org.ict.project_with_a_jump;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class WebViewActivity extends AppCompatActivity {
 
     private WebView browser;
-
-    class MyJavaScriptInterface
-    {
-        @JavascriptInterface
-        @SuppressWarnings("unused")
-        public void processDATA(String data) {
-            Bundle extra = new Bundle();
-            Intent intent = new Intent();
-            extra.putString("data", data);
-            intent.putExtras(extra);
-            setResult(RESULT_OK, intent);
-            finish();
-        }
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +30,19 @@ public class WebViewActivity extends AppCompatActivity {
 
         browser.loadUrl("ec2-3-35-132-187.ap-northeast-2.compute.amazonaws.com/daum.html");
 
+    }
+
+    class MyJavaScriptInterface {
+        @JavascriptInterface
+        @SuppressWarnings("unused")
+        public void processDATA(String data) {
+            Bundle extra = new Bundle();
+            Intent intent = new Intent();
+            extra.putString("data", data);
+            intent.putExtras(extra);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 }
 

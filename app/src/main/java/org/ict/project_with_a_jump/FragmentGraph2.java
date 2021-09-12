@@ -1,20 +1,16 @@
 package org.ict.project_with_a_jump;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -34,33 +30,27 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.SortedMap;
 
-public class FragmentGraph2 extends Fragment implements View.OnClickListener{
+public class FragmentGraph2 extends Fragment implements View.OnClickListener {
     Button button;
     TextView term;
-
-    private LineChart lineChart;
-
     ArrayList values = new ArrayList(); //그래프 데이터 값
     ArrayList days = new ArrayList(); //그래프 x축 라벨
-
     DatabaseReference uidRef1;
-
-    String findDate=null;
-    String writeDate=null;
-
-    int y,m;
-    int monthSum=0;
+    String findDate = null;
+    String writeDate = null;
+    int y, m;
+    int monthSum = 0;
     int index;
+    private LineChart lineChart;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        return inflater.inflate(R.layout.activity_fragment_graph2,container,false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_fragment_graph2, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         button = view.findViewById(R.id.chooseTerm);
         button.setOnClickListener(this);
@@ -84,7 +74,7 @@ public class FragmentGraph2 extends Fragment implements View.OnClickListener{
         uidRef1 = rootRef.child("ManageList").child("국민떡볶이 덕성여대점");
 
         initialize();
-        showMonthChart(startYear,startMonth,endYear,endMonth);
+        showMonthChart(startYear, startMonth, endYear, endMonth);
     }
 
     //'기간 선택' 버튼 누르면 다이얼로그 뜸
@@ -95,7 +85,7 @@ public class FragmentGraph2 extends Fragment implements View.OnClickListener{
             public void close(int startYear, int startMonth, int endYear, int endMonth) {
                 initialize();
                 //선택된 값으로 그래프 그리기
-                showMonthChart(startYear,startMonth,endYear,endMonth);
+                showMonthChart(startYear, startMonth, endYear, endMonth);
             }
         });
         //periodDialog.setCancelable(true);
@@ -105,7 +95,7 @@ public class FragmentGraph2 extends Fragment implements View.OnClickListener{
     /* 그래프 그리기 */
     public void showMonthChart(int firstYear, int firstMonth, int lastYear, int lastMonth) {
         //days.add(""); //x축 라벨 추가
-        index=0;
+        index = 0;
 
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM");
         SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy년MM월");
@@ -114,31 +104,31 @@ public class FragmentGraph2 extends Fragment implements View.OnClickListener{
         y = firstYear; //2021
         m = firstMonth; //08
 
-        Calendar cal= Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
 
         //해당 기간동안 데이터 가져오기 반복
         while ((y < lastYear) || ((y == lastYear) && (m <= lastMonth))) {
-            cal.set(Calendar.YEAR,y);
-            cal.set(Calendar.MONTH,m-1);
+            cal.set(Calendar.YEAR, y);
+            cal.set(Calendar.MONTH, m);
 
-            findDate= sdf2.format(cal.getTime());
-            writeDate= sdf1.format(cal.getTime());
+            findDate = sdf2.format(cal.getTime());
+            writeDate = sdf1.format(cal.getTime());
 
             days.add(writeDate); //x축 라벨 추가
             uidRef1.child(findDate).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    if(snapshot.hasChildren()){
+                    if (snapshot.hasChildren()) {
                         //'oooo년oo월'의 모든 일을 돌아가며 총합 계산
-                        for(DataSnapshot myDataSnapshot : snapshot.getChildren()){
-                            long count= myDataSnapshot.getChildrenCount();
-                            monthSum+=count;
+                        for (DataSnapshot myDataSnapshot : snapshot.getChildren()) {
+                            long count = myDataSnapshot.getChildrenCount();
+                            monthSum += count;
                         }
                         values.add(new BarEntry(monthSum, index)); //데이터 값 추가
-                        drawChart(values,days);
-                        monthSum=0;
+                        drawChart(values, days);
+                        monthSum = 0;
                         index++;
-                    }else {
+                    } else {
                         values.add(new BarEntry(0, index)); //데이터 값 추가
                         drawChart(values, days);
                         index++;
@@ -163,7 +153,7 @@ public class FragmentGraph2 extends Fragment implements View.OnClickListener{
     }
 
     //values와 days로 라인 그래프 그리기
-    public void drawChart(ArrayList values, ArrayList days){
+    public void drawChart(ArrayList values, ArrayList days) {
 
         LineDataSet lineDataSet = new LineDataSet(values, "월별 방문자 수");
         lineDataSet.setCircleColor(Color.BLUE); //그래프 포인트(?값) 색
@@ -186,7 +176,7 @@ public class FragmentGraph2 extends Fragment implements View.OnClickListener{
         };
         lineData.setValueFormatter(vf);
 
-        XAxis xAxis= lineChart.getXAxis();
+        XAxis xAxis = lineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextColor(Color.BLACK);
         xAxis.setDrawGridLines(false);
@@ -209,9 +199,9 @@ public class FragmentGraph2 extends Fragment implements View.OnClickListener{
         lineChart.setDrawGridBackground(false);
         lineChart.setTouchEnabled(true); //차트 터치x
         lineChart.setPinchZoom(false);
-        lineChart.setVisibleXRange(5,5);
+        lineChart.setVisibleXRange(5, 5);
         //lineChart.moveViewToX();
-        lineChart.setExtraOffsets(5f,10f,20f,15f);
+        lineChart.setExtraOffsets(5f, 10f, 20f, 15f);
         //lineChart.setExtraLeftOffset(15f);
         //lineChart.setExtraRightOffset(15f);
         lineChart.moveViewToX(1);
@@ -221,7 +211,7 @@ public class FragmentGraph2 extends Fragment implements View.OnClickListener{
     }
 
     //기존 그래프 초기화
-    public void initialize(){
+    public void initialize() {
         values.clear();
         days.clear();
         lineChart.invalidate();

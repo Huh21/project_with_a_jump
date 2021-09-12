@@ -1,31 +1,25 @@
 package org.ict.project_with_a_jump;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,40 +33,32 @@ import java.util.Date;
 import java.util.Locale;
 
 public class FragmentGraph1 extends Fragment {
-    TextView nowDate, nowYear,nowMonth,number,total;
-
-    private BarChart barChart;
+    TextView nowDate, nowYear, nowMonth, number, total;
     BarDataSet barDataSet;
     BarData barData;
-
-    ArrayList values= new ArrayList(); //그래프 데이터 값
-    ArrayList days= new ArrayList(); //그래프 x축 라벨
-
-    int totalNumber=0;
+    ArrayList values = new ArrayList(); //그래프 데이터 값
+    ArrayList days = new ArrayList(); //그래프 x축 라벨
+    int totalNumber = 0;
+    private BarChart barChart;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        return inflater.inflate(R.layout.activity_fragment_graph1,container,false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_fragment_graph1, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         /* 해당 년도/월 나옴 */
-        //nowYear= view.findViewById(R.id.nowYear);
-        //nowMonth= view.findViewById(R.id.nowMonth);
         nowDate= view.findViewById(R.id.nowDate);
         Calendar cal=Calendar.getInstance(new Locale("en","US"));
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy년\n  M월");
-        SimpleDateFormat sdf1=new SimpleDateFormat("yyyy년");
-        SimpleDateFormat sdf2=new SimpleDateFormat("M월");
         nowDate.setText(sdf.format(cal.getTime()));
-        //nowYear.setText(sdf1.format(cal.getTime()));
-        //nowMonth.setText(sdf2.format(cal.getTime()));
 
         /* 그래프 */
         barChart = view.findViewById(R.id.barChart);
+
         //오늘 날짜에 해당하는 데이터 가져오기
         long today = System.currentTimeMillis();
         Date date = new Date(today);
@@ -107,7 +93,7 @@ public class FragmentGraph1 extends Fragment {
                     }
                     showChart(values,days);
                 }else{
-                    //number.setText("snapshot is null");
+                    number.setText("snapshot is null");
                 }
             }
 
@@ -119,7 +105,7 @@ public class FragmentGraph1 extends Fragment {
 
     }
 
-    public void showChart(ArrayList values,ArrayList days) {
+    public void showChart(ArrayList values, ArrayList days) {
         barDataSet = new BarDataSet(values, "일별 방문자 수");
 
         //BarDataSet barDataSet= new BarDataSet(values,"일별 방문자 수");

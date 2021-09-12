@@ -4,7 +4,8 @@
 </head>
 <body>
 <!-- iOS에서는 position:fixed 버그가 있음, 적용하는 사이트에 맞게 position:absolute 등을 이용하여 top,left값 조정 필요 -->
-<div id="layer" style="display:block;position:fixed;overflow:hidden;z-index:1;-webkit-overflow-scrolling:touch;">
+<div id="layer"
+     style="display:block;position:fixed;overflow:hidden;z-index:1;-webkit-overflow-scrolling:touch;">
 
 </div>
 
@@ -38,7 +39,7 @@ function onReceivedActivityMessageViaJavascriptInterface(json){
     function sample2_execDaumPostcode() {
         new daum.Postcode({
             oncomplete: function(data) {
-			
+
                 // 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
 
                 // 각 주소의 노출 규칙에 따라 주소를 조합한다.
@@ -59,8 +60,8 @@ function onReceivedActivityMessageViaJavascriptInterface(json){
                     // 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
                     fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
                 }
-				
-				
+
+
 				var fullRoadAddr = data.roadAddress; // 도로명 주소 변수
                 var extraRoadAddr = ''; // 도로명 조합형 주소 변수
 
@@ -80,7 +81,7 @@ function onReceivedActivityMessageViaJavascriptInterface(json){
                 // 도로명, 지번 주소의 유무에 따라 해당 조합형 주소를 추가한다.
                 if(fullRoadAddr !== ''){
                     fullRoadAddr += extraRoadAddr;
-                }				
+                }
 
 				window.Android.processDATA(data.zonecode + ", " + fullRoadAddr);
             },
@@ -93,8 +94,8 @@ function onReceivedActivityMessageViaJavascriptInterface(json){
 
         // iframe을 넣은 element의 위치를 화면의 가운데로 이동시킨다.
         initLayerPosition();
-		
-		
+
+
     }
 
     // 브라우저의 크기 변경에 따라 레이어를 가운데로 이동시키고자 하실때에는
@@ -113,8 +114,8 @@ function onReceivedActivityMessageViaJavascriptInterface(json){
         element_layer.style.left = (((window.innerWidth || document.documentElement.clientWidth) - width)/2 - borderWidth) + 'px';
         element_layer.style.top = (((window.innerHeight || document.documentElement.clientHeight) - height)/2 - borderWidth) + 'px';
     }
+
 </script>
 
 </body>
 </html>
-	

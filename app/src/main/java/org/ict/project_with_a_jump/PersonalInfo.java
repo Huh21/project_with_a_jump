@@ -1,27 +1,17 @@
 package org.ict.project_with_a_jump;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,21 +19,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
-import java.nio.channels.AlreadyBoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PersonalInfo extends Fragment {
+    EditText showName, showEmail, showBirth, showPlaceName, showAddress1, showAddress2;
+
     DatabaseReference rootRef;
     DatabaseReference uidRef;
-
-    TextView showName;
-    TextView showBirth;
-    TextView showEmailId;
-    TextView showPassword;
-
-    Button change;
-
     FirebaseAuth mAuth;
 
     @Override
@@ -54,35 +38,55 @@ public class PersonalInfo extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-        /*
-        showName= view.findViewById(R.id.name);
-        showBirth= view.findViewById(R.id.birth);
-        showEmailId= view.findViewById(R.id.email);
-        showPassword= view.findViewById(R.id.password);
-        change=view.findViewById(R.id.changePassword);
+
+        showName=view.findViewById(R.id.name);
+        showEmail=view.findViewById(R.id.email);
+        showBirth=view.findViewById(R.id.birth);
+        showPlaceName=view.findViewById(R.id.placeName);
+        showAddress1=view.findViewById(R.id.address1);
+        showAddress2=view.findViewById(R.id.address2);
 
         mAuth= FirebaseAuth.getInstance();
         String uid = mAuth.getCurrentUser().getUid();
         rootRef= FirebaseDatabase.getInstance().getReference();
-        uidRef= rootRef.child("project_with_a_jump").child("UserAccount:").child(uid);
+        uidRef= rootRef.child("project_with_a_jump").child("ManageAccount").child(uid);
         uidRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot != null){
-                    //String companyName= snapshot.getValue(String.class);
-                    UserAccount userAccount= snapshot.getValue(UserAccount.class);
+                    Manage userAccount= snapshot.getValue(Manage.class);
                     String name= userAccount.getName();
                     String birth= userAccount.getBirth();
                     String emailId= userAccount.getEmailId();
-                    String password= userAccount.getPassword();
+                    String placeName= userAccount.getCompanyName();
+                    String daum1= userAccount.getDaum1();
+                    String daum2= userAccount.getDaum2();
+
+                    //개인정보 출력
                     showName.setText(name+" 님");
-                    showBirth.setText("생년월일       "+birth);
-                    showEmailId.setText("아이디(이메일) "+emailId);
-                    showPassword.setText("비밀번호       "+password);
+                    showBirth.setText(birth);
+                    showEmail.setText(emailId);
+                    showPlaceName.setText(placeName);
+                    showAddress1.setText(daum1);
+                    showAddress2.setText(daum2);
+
+                    /*
+                    SimpleDateFormat sdf= new SimpleDateFormat("yyyy년 MM월 dd일");
+                    try {
+                        Date birthDate= sdf.parse(birth);
+                        showBirth.setText(birthDate+"");
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    */
                 }else{
                     showName.setText("오류");
-                    showEmailId.setText("오류");
-                    showPassword.setText("오류");
+                    showBirth.setText("오류");
+                    showEmail.setText("오류");
+                    showPlaceName.setText("오류");
+                    showAddress1.setText("오류");
+                    showAddress2.setText("오류");
+
                 }
             }
 
@@ -91,62 +95,5 @@ public class PersonalInfo extends Fragment {
 
             }
         });
-
-
-        // 툴바
-        toolbar= (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-        //비밀번호 재설정
-        change.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final EditText editText= new EditText(getContext());
-
-                //AlertDialog.Builder dialog= new AlertDialog.Builder(PersonalInfo.this);
-                AlertDialog.Builder dialog= new AlertDialog.Builder(getContext());
-                dialog.setTitle("비밀번호 재설정");
-                dialog.setMessage("이메일을 입력해주세요.");
-                dialog.setView(editText);
-                dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(editText.length() > 0){
-                            String email= editText.getText().toString();
-                            mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()){
-                                        Toast.makeText(getContext(), "이메일을 보냈습니다.", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                        }else{
-                            Toast.makeText(getContext(), "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });
-                dialog.show();
-            }
-        });
-        */
-
     }
-
-    /*
-    // 툴바에 뒤로가기 버튼 설정
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        if(item.getItemId()==android.R.id.home){
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    */
-
 }
