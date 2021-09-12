@@ -51,14 +51,19 @@ public class FragmentGraph1 extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         /* 해당 년도/월 나옴 */
-        nowDate= view.findViewById(R.id.nowDate);
-        Calendar cal=Calendar.getInstance(new Locale("en","US"));
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy년\n  M월");
+        //nowYear= view.findViewById(R.id.nowYear);
+        //nowMonth= view.findViewById(R.id.nowMonth);
+        nowDate = view.findViewById(R.id.nowDate);
+        Calendar cal = Calendar.getInstance(new Locale("en", "US"));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년\n  M월");
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy년");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("M월");
         nowDate.setText(sdf.format(cal.getTime()));
+        //nowYear.setText(sdf1.format(cal.getTime()));
+        //nowMonth.setText(sdf2.format(cal.getTime()));
 
         /* 그래프 */
         barChart = view.findViewById(R.id.barChart);
-
         //오늘 날짜에 해당하는 데이터 가져오기
         long today = System.currentTimeMillis();
         Date date = new Date(today);
@@ -71,29 +76,29 @@ public class FragmentGraph1 extends Fragment {
         days.clear();
         barChart.invalidate();
         barChart.clear();
-        totalNumber=0;
+        totalNumber = 0;
 
         /* 일별 방문자 수 파악, 그래프에 반영하기 */
-        total=view.findViewById(R.id.total); //총 방문자 수
+        total = view.findViewById(R.id.total); //총 방문자 수
         //String uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference rootRef= FirebaseDatabase.getInstance().getReference();
-        DatabaseReference uidRef1= rootRef.child("ManageList").child("국민떡볶이 덕성여대점");
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference uidRef1 = rootRef.child("ManageList").child("국민떡볶이 덕성여대점");
         uidRef1.child(month).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                int index=0;
-                if(snapshot.hasChildren()){
-                    for(DataSnapshot myDataSnapshot : snapshot.getChildren()){
-                        long count= myDataSnapshot.getChildrenCount();
-                        values.add(new BarEntry((int)count,index));
+                int index = 0;
+                if (snapshot.hasChildren()) {
+                    for (DataSnapshot myDataSnapshot : snapshot.getChildren()) {
+                        long count = myDataSnapshot.getChildrenCount();
+                        values.add(new BarEntry((int) count, index));
                         days.add(myDataSnapshot.getKey());
                         index++;
-                        totalNumber+=(int)count;
-                        total.setText(totalNumber+"명");
+                        totalNumber += (int) count;
+                        total.setText(totalNumber + "명");
                     }
-                    showChart(values,days);
-                }else{
-                    number.setText("snapshot is null");
+                    showChart(values, days);
+                } else {
+                    //number.setText("snapshot is null");
                 }
             }
 
@@ -134,7 +139,7 @@ public class FragmentGraph1 extends Fragment {
         xAxis.setTextSize(12f);
 
         //y축
-        YAxis yAxisLeft= barChart.getAxisLeft();
+        YAxis yAxisLeft = barChart.getAxisLeft();
         //yAxisLeft.setDrawLabels(false);
         //yAxisLeft.setDrawAxisLine(false);
         //yAxisLeft.setDrawGridLines(false);
@@ -155,5 +160,4 @@ public class FragmentGraph1 extends Fragment {
         barChart.setVisibleXRangeMaximum(7);
         barChart.moveViewToX(7);
         barChart.invalidate();
-    }
-}
+    }}
