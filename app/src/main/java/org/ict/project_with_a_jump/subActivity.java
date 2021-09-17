@@ -18,6 +18,7 @@ import android.widget.Toast;
 import java.util.Random;
 
 public class subActivity extends AppCompatActivity {
+
     EditText user_pnumber;
     Button sendSMSBt;
     EditText inputCheckNum;
@@ -37,7 +38,7 @@ public class subActivity extends AppCompatActivity {
         sendSMSBt = findViewById(R.id.send_sms_button);
         user_pnumber = findViewById(R.id.user_pnumber);
         inputCheckNum = findViewById(R.id.input_check_num);
-        checkBt= findViewById(R.id.check_button);
+        checkBt= findViewById(R.id.check_button4);
 
 
         /***
