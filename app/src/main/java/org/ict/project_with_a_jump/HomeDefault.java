@@ -18,7 +18,6 @@ public class HomeDefault extends AppCompatActivity {
     private final PersonalInfo infoFragment = new PersonalInfo();
     private final ChangeOfficeHour workFragment = new ChangeOfficeHour();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         startActivity(new Intent(getApplicationContext(), Loading.class));
@@ -32,8 +31,8 @@ public class HomeDefault extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new ItemSelected());
     }
 
-    class ItemSelected implements BottomNavigationView.OnNavigationItemSelectedListener {
 
+    class ItemSelected implements BottomNavigationView.OnNavigationItemSelectedListener {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
