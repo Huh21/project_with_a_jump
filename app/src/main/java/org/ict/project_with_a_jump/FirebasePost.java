@@ -12,15 +12,6 @@ public class FirebasePost {
         // Default constructor required for calls to DataSnapshot.getValue(FirebasePost.class)
     }
 
-    public FirebasePost(String date, String name1, String phonenumber, String home, String agree, String temperature) {
-        this.date = date;
-        this.name1 = name1;
-        this.phonenumber = phonenumber;
-        this.home = home;
-        this.agree = agree;
-        this.temperature = temperature;
-    }
-
     public String getDate() {
         return date;
     }
@@ -69,4 +60,13 @@ public class FirebasePost {
         return temperature;
     }
 
+    public FirebasePost(String date, String name1, String phonenumber, String home, String agree, String temperature) {
+        this.date = date;
+        this.name1 = name1;
+        this.phonenumber = phonenumber;
+        this.home = home;
+        this.agree = agree;
+        this.temperature = temperature;
+    }
 }
+
