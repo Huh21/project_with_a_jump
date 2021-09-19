@@ -109,7 +109,7 @@ public class FragmentGraph2 extends Fragment implements View.OnClickListener {
         //해당 기간동안 데이터 가져오기 반복
         while ((y < lastYear) || ((y == lastYear) && (m <= lastMonth))) {
             cal.set(Calendar.YEAR, y);
-            cal.set(Calendar.MONTH, m - 1);
+            cal.set(Calendar.MONTH, m-1);
 
             findDate = sdf2.format(cal.getTime());
             writeDate = sdf1.format(cal.getTime());

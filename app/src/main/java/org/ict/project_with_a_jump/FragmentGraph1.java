@@ -160,5 +160,4 @@ public class FragmentGraph1 extends Fragment {
         barChart.setVisibleXRangeMaximum(7);
         barChart.moveViewToX(7);
         barChart.invalidate();
-    }
-}
+    }}
