@@ -49,11 +49,9 @@ public class PeriodDialog {
 
         picker2.setMinValue(MIN_MONTH);
         picker2.setMaxValue(MAX_MONTH);
-        //picker2.setValue(cal.get(Calendar.MONTH)-5);
         picker2.setValue(cal.get(Calendar.MONTH));
         picker2.setWrapSelectorWheel(false);
 
-        //end
         //end
         picker3 = (NumberPicker) dialog.findViewById(R.id.endYear);
         picker4 = (NumberPicker) dialog.findViewById(R.id.endMonth);

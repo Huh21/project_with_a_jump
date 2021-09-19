@@ -38,27 +38,27 @@ public class RegisterActivity5 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register5);
 
-        endButton = (Button) findViewById(R.id.endButton);
-        mon1 = (EditText) findViewById(R.id.mon1);
-        mon2 = (EditText) findViewById(R.id.mon2);
-        tue1 = (EditText) findViewById(R.id.tue1);
-        tue2 = (EditText) findViewById(R.id.tue2);
-        wed1 = (EditText) findViewById(R.id.wed1);
-        wed2 = (EditText) findViewById(R.id.wed2);
-        thu1 = (EditText) findViewById(R.id.thu1);
-        thu2 = (EditText) findViewById(R.id.thu2);
-        fri1 = (EditText) findViewById(R.id.fri1);
-        fri2 = (EditText) findViewById(R.id.fri2);
-        sat1 = (EditText) findViewById(R.id.sat1);
-        sat2 = (EditText) findViewById(R.id.sat2);
-        sun1 = (EditText) findViewById(R.id.sun1);
-        sun2 = (EditText) findViewById(R.id.sun2);
+        endButton = findViewById(R.id.endButton);
+        mon1 = findViewById(R.id.mon1);
+        mon2 = findViewById(R.id.mon2);
+        tue1 = findViewById(R.id.tue1);
+        tue2 = findViewById(R.id.tue2);
+        wed1 = findViewById(R.id.wed1);
+        wed2 = findViewById(R.id.wed2);
+        thu1 = findViewById(R.id.thu1);
+        thu2 = findViewById(R.id.thu2);
+        fri1 = findViewById(R.id.fri1);
+        fri2 = findViewById(R.id.fri2);
+        sat1 = findViewById(R.id.sat1);
+        sat2 = findViewById(R.id.sat2);
+        sun1 = findViewById(R.id.sun1);
+        sun2 = findViewById(R.id.sun2);
 
+        //영업시간 저장
         endButton = findViewById(R.id.endButton);
         endButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /* 영업시간 저장 */
                 //edittext값 가져오기
                 days[0] = mon1.getText().toString();
                 days[1] = mon2.getText().toString();
@@ -81,23 +81,21 @@ public class RegisterActivity5 extends AppCompatActivity {
                 days[12] = sun1.getText().toString();
                 days[13] = sun2.getText().toString();
 
+                //영업 시간이 제대로 입력되었는지 확인 후 저장
                 for (int i = 0; i < days.length; i += 2) {
-                    if ((days[i] != null) && (days[i + 1] != null)) {
-                        saveInfo(days[i], days[i + 1], dayName[i], dayName[i + 1], title[i / 2]);
-                    }
+                    saveInfo(days[i], days[i + 1], dayName[i], dayName[i + 1], title[i / 2]);
                 }
-                Toast.makeText(getApplicationContext(), "영업시간이 설정되었습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "회원가입을 완료했습니다.", Toast.LENGTH_LONG).show();
 
-                /* 로그인 화면으로 돌아가기 */
+                //로그인 화면으로 돌아가기
                 Intent intent = new Intent(RegisterActivity5.this, MainActivity2.class);
                 startActivity(intent);
-                Toast.makeText(getApplicationContext(), "회원가입을 완료했습니다.", Toast.LENGTH_LONG).show();
             }
         });
 
     }
 
-    //값 저장(한 요일의 오픈/종료 시간 한번에 저장)
+    //값 저장(한 요일의 오픈/종료 시간을 같이 저장)
     public void saveInfo(String input1, String input2, String key1, String key2, String day) {
         //SharedPreferences에 저장
         SharedPreferences pref = getSharedPreferences("officeTime", Context.MODE_PRIVATE);
@@ -116,4 +114,5 @@ public class RegisterActivity5 extends AppCompatActivity {
         schedule.setClosed(input2);
         uidRef.setValue(schedule);
     }
+
 }

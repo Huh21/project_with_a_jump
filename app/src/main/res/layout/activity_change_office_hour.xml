@@ -49,7 +49,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:hint="00시00분"
+            android:hint="00:00"
             android:inputType="time"
             android:textAlignment="center" />
 
@@ -67,7 +67,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:hint="00시00분"
+            android:hint="00:00"
             android:inputType="time"
             android:textAlignment="center" />
     </LinearLayout>
@@ -100,7 +100,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:hint="00시00분"
+            android:hint="00:00"
             android:inputType="time"
             android:textAlignment="center" />
 
@@ -118,7 +118,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:hint="00시00분"
+            android:hint="00:00"
             android:inputType="time"
             android:textAlignment="center" />
     </LinearLayout>
@@ -152,7 +152,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:hint="00시00분"
+            android:hint="00:00"
             android:inputType="time"
             android:textAlignment="center" />
 
@@ -170,7 +170,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:hint="00시00분"
+            android:hint="00:00"
             android:inputType="time"
             android:textAlignment="center" />
     </LinearLayout>
@@ -204,7 +204,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:hint="00시00분"
+            android:hint="00:00"
             android:inputType="time"
             android:textAlignment="center" />
 
@@ -222,7 +222,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:hint="00시00분"
+            android:hint="00:00"
             android:inputType="time"
             android:textAlignment="center" />
     </LinearLayout>
@@ -255,7 +255,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:hint="00시00분"
+            android:hint="00:00"
             android:inputType="time"
             android:textAlignment="center" />
 
@@ -273,7 +273,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:hint="00시00분"
+            android:hint="00:00"
             android:inputType="time"
             android:textAlignment="center" />
     </LinearLayout>
@@ -306,7 +306,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:hint="00시00분"
+            android:hint="00:00"
             android:inputType="time"
             android:textAlignment="center" />
 
@@ -324,7 +324,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:hint="00시00분"
+            android:hint="00:00"
             android:inputType="time"
             android:textAlignment="center" />
     </LinearLayout>
@@ -356,7 +356,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:hint="00시00분"
+            android:hint="00:00"
             android:inputType="time"
             android:textAlignment="center" />
 
@@ -374,7 +374,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:hint="00시00분"
+            android:hint="00:00"
             android:inputType="time"
             android:textAlignment="center" />
     </LinearLayout>

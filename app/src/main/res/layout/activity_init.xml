@@ -31,7 +31,7 @@
         android:layout_marginBottom="140dp"
         android:text="사업자"
         android:textSize="24sp"
-        app:backgroundTint="#C5C5C5"
+        app:backgroundTint="#3F51B5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/userBtn" />
@@ -47,7 +47,7 @@
         android:layout_marginBottom="140dp"
         android:text="사용자"
         android:textSize="24sp"
-        app:backgroundTint="#C5C5C5"
+        app:backgroundTint="#3F51B5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/manageBtn"
         app:layout_constraintStart_toStartOf="parent" />
@@ -72,4 +72,5 @@
         app:layout_constraintBottom_toTopOf="@+id/userBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/user" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

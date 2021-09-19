@@ -44,7 +44,7 @@ public class InitActivity extends AppCompatActivity {
             public void onClick(View arg0) {
                 editor.putString("select", "manageBtn");
                 editor.commit();
-                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
                 startActivity(intent);
             }
         });

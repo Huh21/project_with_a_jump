@@ -1,18 +1,14 @@
 package org.ict.project_with_a_jump;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,37 +23,21 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class HomeScreen extends Fragment {
-    //영업시간 설정
-    //private static final String OPEN = "8:00:00";
-    //private static final String CLOSE = "22:00:00";
-
-    Date nowTime = null;
-    Date openTime = null;
-    Date closingTime = null;
-
-    /*
-    Date nowTime = null;
-    Date openTime = null;
-    Date closingTime = null;
-    */
-
-    int openCompare = 100;
-    int closingCompare = 100;
-
-    //private static Handler handler;
-
-    //TextView
-    Toolbar toolbar;
+    //Toolbar toolbar;
     TextView clock1, clock2;
     TextView placeName;
     TextView officeHour;
     TextView state;
 
-    String[] title = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
-
-    String companyName;
-
+    Date nowTime = null;
+    Date openTime = null;
+    Date closingTime = null;
     String open, closed;
+    int openCompare = 100;
+    int closingCompare = 100;
+
+
+    String[] title = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
 
     private Activity myActivity;
 
@@ -77,7 +57,6 @@ public class HomeScreen extends Fragment {
         //startActivity(new Intent(getContext(), Loading.class));
         super.onViewCreated(view, savedInstanceState);
 
-        /* findViewById */
         clock1 = view.findViewById(R.id.nowTime1);
         clock2 = view.findViewById(R.id.nowTime2);
 
@@ -85,11 +64,11 @@ public class HomeScreen extends Fragment {
         officeHour = view.findViewById(R.id.officeHour);
         state = view.findViewById(R.id.state);
 
-        /* 오늘 날짜, 시간 */
+        //오늘 날짜, 시간
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf1 = new SimpleDateFormat("MM월 dd일 (EE)");
-        SimpleDateFormat sdf3 = new SimpleDateFormat("a hh시 mm분 ss초"); //보여주는 방식
         SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm"); //영업시간과 비교할 형식
+        SimpleDateFormat sdf3 = new SimpleDateFormat("a hh시 mm분 ss초"); //보여주는 방식
         String dateString = sdf1.format(cal.getTime()); //오늘 날짜
         int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 
@@ -102,8 +81,8 @@ public class HomeScreen extends Fragment {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot != null) {
-                    Manage user = snapshot.getValue(Manage.class);
-                    companyName = user.getCompanyName();
+                    ManageAccount user = snapshot.getValue(ManageAccount.class);
+                    String companyName = user.getCompanyName();
                     placeName.setText(companyName);
                 } else {
                     placeName.setText("snapshot(placeName) is null");
@@ -117,7 +96,7 @@ public class HomeScreen extends Fragment {
             }
         });
 
-        //오늘의 영업시간 가져오기
+        //파이어베이스에서 오늘 영업시간 가져오기
         DatabaseReference uidRef2 = rootRef.child("project_with_a_jump").child("ManageAccount").child(uid).child("officeHour").child(title[dayOfWeek - 1]);
         uidRef2.addValueEventListener(new ValueEventListener() {
             @Override
@@ -127,11 +106,10 @@ public class HomeScreen extends Fragment {
                     open = schedule.getOpen();
                     closed = schedule.getClosed();
 
-                    //테스트 후 지워야 할 부분
-                    if ((open != null) && (closed != null)) {
-                        officeHour.setText("시작: " + open + " / 종료: " + closed);
+                    if ((open.equals("")) && (open.equals(""))) {
+                        officeHour.setText("휴무일");
                     } else {
-                        officeHour.setText("오늘 영업시간이 설정되지 않았음");
+                        officeHour.setText("영업 시작 시간: " + open + "" + "\n영업 종료 시간: " + closed);
                     }
                 } else {
                     officeHour.setText("snapshot(officeHour) is null");
@@ -145,17 +123,7 @@ public class HomeScreen extends Fragment {
             }
         });
 
-        /* Firebase에서 정보 가져오기 */
-        //시설 이름
-        //Intent receive_intent= getIntent();
-        //String companyName= receive_intent.getStringExtra("place");
-        //placeName.setText(companyName);
-
-        //영업시간
-        //open= receive_intent.getStringExtra("openTime");
-        //closed= receive_intent.getStringExtra("closedTime");
-
-        //갱신되는 현재 시간
+        //현재시간(갱신됨)
         Thread th = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -177,14 +145,6 @@ public class HomeScreen extends Fragment {
         });
         th.start();
 
-        /*
-        // 툴바
-        toolbar= view.findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        //getActionBar().setDisplayShowTitleEnabled(false);
-        */
-
         clock1.setText(dateString);
     }
 
@@ -196,23 +156,30 @@ public class HomeScreen extends Fragment {
         return nowString;
     }
 
-    //현재시간,영업시간 비교하기
+    // 현재시간,영업시간 비교하기
     public void showMessage(SimpleDateFormat sdf, String nowString) {
         //시간 비교를 위해 String 타입의 시간->Date 타입으로 바꾸기
+
         try {
-            nowTime = sdf.parse(nowString);
-            openTime = sdf.parse(open);
-            closingTime = sdf.parse(closed);
+            if ((open.equals("")) && (open.equals(""))) {
+                openTime = null;
+                closingTime = null;
+            } else {
+                nowTime = sdf.parse(nowString);
+                openTime = sdf.parse(open);
+                closingTime = sdf.parse(closed);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        //시간 비교
-        if ((openTime != null) && (closingTime != null)) { //openTime,closingTime 둘 다 null 아닐 때
+
+        //현재시간,영업시간 비교
+        if ((openTime != null) && (closingTime != null)) {
             openCompare = nowTime.compareTo(openTime);
             closingCompare = nowTime.compareTo(closingTime);
 
-            //현재시간,영업시간 비교
             if (openCompare > 0) {
                 if (closingCompare < 0) {
                     state.setText("전자출입명부 작성 중입니다.");
@@ -226,46 +193,8 @@ public class HomeScreen extends Fragment {
             } else {
                 state.setText("영업이 시작되었습니다.");
             }
-        } else if ((openTime == null) && (closingTime == null)) { //openTime,closingTime 둘 중 하나라도 null일 때(비교할 영업시간이 없는 경우)
-            state.setText("휴무일 입니다.");
         } else {
-            state.setText("영업 시작 시간과 종료 시간을 모두 입력해주세요.");
+            state.setText("전자출입명부 작성 시간이 아닙니다!!");
         }
     }
-
-    /*
-    // 옵션 메뉴 관련 메소드
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_button,menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.setup:
-                Intent setupIntent = new Intent(getApplicationContext(), SetUp.class);
-                startActivity(setupIntent);
-                return true;
-            case R.id.history:
-                Intent historyIntent = new Intent(getApplicationContext(), History.class);
-                startActivity(historyIntent);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    */
-
-    //오늘의 영업시간 불러오기
-    public void takeInfo(EditText editText, String key) {
-        SharedPreferences pref = this.getActivity().getSharedPreferences("test", Context.MODE_PRIVATE);
-        String result = pref.getString(key, "디폴트");
-        if (result != "디폴트") {
-            editText.setText(result);
-        } else { //해당 키 값이 없을 경우(=저장된 데이터가 없을 경우)
-
-        }
-    }
-
 }

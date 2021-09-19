@@ -3,30 +3,32 @@ package org.ict.project_with_a_jump;
 /**
  * 사용자 계정 정보 모델 클래스
  */
-public class Manage {
-    private String idToken;     //Firebase Uid(고유 토큰정보)
-    private String emailId;
-    private String password;
-    private String name;
+public class ManageAccount {
     private String birth;
+    private String companyName;
     private String daum1;
     private String daum2;
     private String daum3;
-    private String companyName;
+    private String gpsData; // 위치 인증을 통해 얻은 사업장 주소
+    private String emailId;
+    private String idToken;     //Firebase Uid(고유 토큰정보)
+    private String name;
+    private String password;
 
-    public Manage() {
+    public ManageAccount() {
     }
 
-    public Manage(String idToken, String emailId, String password, String name, String birth, String daum1, String daum2, String daum3, String companyName) {
-        this.idToken = idToken;
-        this.emailId = emailId;
-        this.password = password;
-        this.name = name;
+    public ManageAccount(String birth, String companyName, String daum1, String daum2, String daum3, String gpsData, String emailId, String idToken, String name, String password) {
         this.birth = birth;
+        this.companyName = companyName;
         this.daum1 = daum1;
         this.daum2 = daum2;
         this.daum3 = daum3;
-        this.companyName = companyName;
+        this.gpsData = gpsData;
+        this.emailId = emailId;
+        this.idToken = idToken;
+        this.name = name;
+        this.password = password;
     }
 
     public String getIdToken() {
@@ -91,6 +93,14 @@ public class Manage {
 
     public void setDaum3(String daum3) {
         this.daum3 = daum3;
+    }
+
+    public String getGpsData() {
+        return gpsData;
+    }
+
+    public void setGpsData(String gpsData) {
+        this.gpsData = gpsData;
     }
 
     public String getCompanyName() {

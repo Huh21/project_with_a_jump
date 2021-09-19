@@ -100,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "현재 위치에 해당하는 시설을 찾을 수 없습니다.", Toast.LENGTH_LONG).show();
                 } else {
                     // 현재 위치를 기반으로 명부를 가진 시설을 찾아서 시설명을 사용자에게 보여줌
-                    Toast.makeText(MainActivity.this, facilityName + " 입장", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(MainActivity.this, facilityName + " 입장", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "국민떡볶이 덕성여대점 입장", Toast.LENGTH_LONG).show();
 
                     // 해당 시설의 명부 화면으로 이동
                     Intent intent = new Intent(getApplicationContext(), EntryActivity.class);
@@ -126,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "해당 시설의 명부가 존재하지 않습니다.\n"
                                 + "담당자에게 문의하세요.", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(MainActivity.this, facilityName + " 입장", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(MainActivity.this, facilityName + " 입장", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "국민떡볶이 덕성여대점 입장", Toast.LENGTH_LONG).show();
 
                         // 해당 시설의 명부 화면으로 이동
                         Intent intent = new Intent(getApplicationContext(), EntryActivity.class);
@@ -137,16 +139,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*// 계정 유형 전환 처리
+        // 계정 유형 전환 처리
         changeBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-                // 사업자 정보 등록 화면으로 이동
-               //Intent intent = new Intent(getApplicationContext(), .class);
-                //startActivity(intent);
+                // 사업자 로그인 화면으로 이동
+                Intent change = new Intent(getApplicationContext(), MainActivity2.class);
+                startActivity(change);
             }
         });
 
-        // 사용자가 입장한 시설 명부 기록 확인
+        /* // 사용자가 입장한 시설 명부 기록 확인
         listBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
 
@@ -200,7 +202,24 @@ public class MainActivity extends AppCompatActivity {
     // 뒤로가기 제어
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("정말로 종료하시겠습니까?");
+
+        alert.setPositiveButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.setNegativeButton("종료", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finishAffinity();
+            }
+        });
+
+        AlertDialog alert2 = alert.create();
+        alert2.show();
     }
 
     public String modifyAddress(String address) {
@@ -256,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot != null) {
-                            Manage user = snapshot.getValue(Manage.class);
+                            ManageAccount user = snapshot.getValue(ManageAccount.class);
                             facilityName = user.getCompanyName();
                         } else {
                             facilityName = "not found";
@@ -277,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot != null) {
-                            Manage user = snapshot.getValue(Manage.class);
+                            ManageAccount user = snapshot.getValue(ManageAccount.class);
                             facilityName = user.getCompanyName();
                         } else {
                             facilityName = "not found";
@@ -412,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
             addresses = geocoder.getFromLocation(
                     latitude,
                     longitude,
-                    7);
+                    5);
         } catch (IOException ioException) {
             //네트워크 문제
             Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();

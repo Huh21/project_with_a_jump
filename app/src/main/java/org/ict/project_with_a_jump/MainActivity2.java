@@ -33,7 +33,6 @@ public class MainActivity2 extends AppCompatActivity {
         pwd_login = (EditText) findViewById(R.id.pwd_login);
 
         //firebaseauth 인스턴스 초기화
-
         firebaseAuth = FirebaseAuth.getInstance();
 
         //버튼 누름
@@ -46,24 +45,37 @@ public class MainActivity2 extends AppCompatActivity {
                 String email = email_login.getText().toString().trim();
                 String pwd = pwd_login.getText().toString().trim();
 
+                boolean isGoToLogin = true;
+
+                //체크하기
+                if (email.isEmpty()) {
+                    Toast.makeText(MainActivity2.this, "이메일을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    isGoToLogin = false;
+                }
+
+                if (pwd.isEmpty()) {
+                    Toast.makeText(MainActivity2.this, "비밀번호 입력하세요.", Toast.LENGTH_SHORT).show();
+                    isGoToLogin = false;
+                }
+
                 //signinwithemailandpassword 메서드 사용
                 //addOnCompleteListener, onComplete 메서드 사용
 
-
-                firebaseAuth.signInWithEmailAndPassword(email, pwd)
-                        .addOnCompleteListener(MainActivity2.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull @org.jetbrains.annotations.NotNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    //Toast.makeText(MainActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(MainActivity2.this, HomeDefault.class);
-                                    startActivity(intent);
-                                } else {
-                                    Toast.makeText(MainActivity2.this, "로그인 오류", Toast.LENGTH_SHORT).show();
-
+                if (isGoToLogin) {
+                    firebaseAuth.signInWithEmailAndPassword(email, pwd)
+                            .addOnCompleteListener(MainActivity2.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull @org.jetbrains.annotations.NotNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(MainActivity2.this, "로그인 성공", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(MainActivity2.this, HomeScreen.class);
+                                        startActivity(intent);
+                                    } else {
+                                        Toast.makeText(MainActivity2.this, "로그인 오류", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                }
             }
         });
 
@@ -74,7 +86,7 @@ public class MainActivity2 extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity2.this, RegisterActivity.class);
+                Intent intent = new Intent(MainActivity2.this, RegisterActivity2.class);
                 startActivity(intent);
             }
         });

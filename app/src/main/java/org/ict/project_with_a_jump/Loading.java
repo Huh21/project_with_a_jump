@@ -28,12 +28,9 @@ public class Loading extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 finish();
 
-                //overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-
             }
         };
         handler.sendEmptyMessageDelayed(0, 1500);
-        //public void onBackPressed(){} //loading 띄우는 과정에 백 버튼 누를수도
     }
 
     public class ShowProgress extends AsyncTask<Void, Integer, Void> {
@@ -70,4 +67,3 @@ public class Loading extends AppCompatActivity {
 
     }
 }
-

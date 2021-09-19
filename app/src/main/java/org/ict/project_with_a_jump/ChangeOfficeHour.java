@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,7 +19,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class ChangeOfficeHour extends Fragment {
-    Toolbar toolbar;
     Button save;
     EditText mon1, mon2;
     EditText tue1, tue2;
@@ -36,18 +34,6 @@ public class ChangeOfficeHour extends Fragment {
 
     DatabaseReference rootRef;
     DatabaseReference uidRef;
-
-    /*
-    // 툴바에 뒤로가기 버튼 설정
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        if(item.getItemId()==android.R.id.home){
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,36 +60,28 @@ public class ChangeOfficeHour extends Fragment {
         sun1 = view.findViewById(R.id.sun1);
         sun2 = view.findViewById(R.id.sun2);
 
-        //있는 값 불러오기
-        takeInfo(mon1, dayName[0]);
-        takeInfo(mon2, dayName[1]);
-        takeInfo(tue1, dayName[2]);
-        takeInfo(tue2, dayName[3]);
-        takeInfo(wed1, dayName[4]);
-        takeInfo(wed2, dayName[5]);
-        takeInfo(thu1, dayName[6]);
-        takeInfo(thu2, dayName[7]);
-        takeInfo(fri1, dayName[8]);
-        takeInfo(fri2, dayName[9]);
-        takeInfo(sat1, dayName[10]);
-        takeInfo(sat2, dayName[11]);
-        takeInfo(sun1, dayName[12]);
-        takeInfo(sun2, dayName[13]);
+        //저장된 값 불러오기
+        takeInfo(mon1, mon2, dayName[0], dayName[1]);
+        //takeInfo(mon2, dayName[1]);
+        takeInfo(tue1, tue2, dayName[2], dayName[3]);
+        //takeInfo(tue2, dayName[3]);
+        takeInfo(wed1, wed2, dayName[4], dayName[5]);
+        //takeInfo(wed2, dayName[5]);
+        takeInfo(thu1, thu2, dayName[6], dayName[7]);
+        //takeInfo(thu2, dayName[7]);
+        takeInfo(fri1, fri2, dayName[8], dayName[9]);
+        //takeInfo(fri2, dayName[9]);
+        takeInfo(sat1, sat2, dayName[10], dayName[11]);
+        //takeInfo(sat2, dayName[11]);
+        takeInfo(sun1, sun2, dayName[12], dayName[13]);
+        //takeInfo(sun2, dayName[13]);
 
-        /*
-        // 툴바
-        toolbar= (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        */
 
-        //저장 버튼을 누르면 SharedPreferences에 값 저장
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //edittext값 가져오기
-                days[0] = mon1.getText().toString(); //days[0]=19:30
+                days[0] = mon1.getText().toString();
                 days[1] = mon2.getText().toString();
 
                 days[2] = tue1.getText().toString();
@@ -125,23 +103,22 @@ public class ChangeOfficeHour extends Fragment {
                 days[13] = sun2.getText().toString();
 
                 for (int i = 0; i < days.length; i += 2) {
-                    if ((days[i] != null) && (days[i + 1] != null)) {
-                        saveInfo(days[i], days[i + 1], dayName[i], dayName[i + 1], title[i / 2]);
-                    }
+                    saveInfo(days[i], days[i + 1], dayName[i], dayName[i + 1], title[i / 2]);
                 }
                 Toast.makeText(getContext(), "영업시간이 변경되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    //값 불러오기
-    public void takeInfo(EditText editText, String key) {
+    //저장된 영업시간 불러오기
+    public void takeInfo(EditText editText1, EditText editText2, String key1, String key2) {
         SharedPreferences pref = getActivity().getSharedPreferences("officeTime", Context.MODE_PRIVATE);
-        String result = pref.getString(key, "디폴트");
-        if (result != "디폴트") {
-            editText.setText(result);
+        String result1 = pref.getString(key1, "디폴트");
+        String result2 = pref.getString(key2, "디폴트");
+        if (result1 != "디폴트") {
+            editText1.setText(result1);
+            editText2.setText(result2);
         } else { //해당 키 값이 없을 경우(=저장된 데이터가 없을 경우)
-            editText.setText("");
         }
     }
 
@@ -151,24 +128,18 @@ public class ChangeOfficeHour extends Fragment {
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(key1, input1);
         editor.putString(key2, input2);
+        //if(input1=="휴무"){ //휴무 체크 시 체크 상태 저장
+        //    editor.putString(day, "checked");
+        //}
         editor.commit();
-
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         rootRef = FirebaseDatabase.getInstance().getReference();
-        uidRef = rootRef.child("project_with_a_jump").child("UserAccount:").child(uid).child("officeHour").child(day);
+        uidRef = rootRef.child("project_with_a_jump").child("ManageAccount").child(uid).child("officeHour").child(day);
 
         Time schedule = new Time();
         schedule.setOpen(input1);
         schedule.setClosed(input2);
         uidRef.setValue(schedule);
-        /*
-        if(input.isEmpty()){
-            Toast.makeText(this,"휴무",Toast.LENGTH_SHORT).show();
-            editor.putString("input","*");
-        }else{ //edittext에 입력된 값이 있다면 저장
-            Toast.makeText(this,input+" 저장",Toast.LENGTH_SHORT).show();
-        }
-        */
     }
 
 }

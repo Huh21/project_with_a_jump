@@ -73,22 +73,15 @@
         app:layout_constraintTop_toBottomOf="@+id/pwd_login" />
 
     <Button
-        android:id="@+id/button18"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="사용자"
-        app:layout_constraintLeft_toRightOf="@+id/사업자register"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
-
-    <Button
         android:id="@+id/사업자register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginLeft="160dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="163dp"
+        android:layout_marginRight="163dp"
         android:text="사업자"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/button18"
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
 </androidx.constraintlayout.widget.ConstraintLayout>
