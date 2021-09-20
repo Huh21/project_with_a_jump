@@ -1,5 +1,6 @@
 package org.ict.project_with_a_jump;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,9 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -23,7 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class ChangePwd extends DialogFragment {
+public class ChangePwdDialog extends DialogFragment {
     TextView confirm1;
     TextView confirm2;
     EditText beforePwd;
@@ -33,12 +37,12 @@ public class ChangePwd extends DialogFragment {
     Button button_cancel;
     private Fragment fragment;
 
-    public ChangePwd() {
+    public ChangePwdDialog() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_change_pwd, container, false);
+        View view = inflater.inflate(R.layout.activity_change_pwd_dialog, container, false);
 
         confirm1 = view.findViewById(R.id.confirm1);
         confirm2 = view.findViewById(R.id.confirm2);
@@ -52,7 +56,6 @@ public class ChangePwd extends DialogFragment {
         String value = args.getString("key");
 
         fragment = getActivity().getSupportFragmentManager().findFragmentByTag("tag");
-
 
         if (fragment != null) {
             DialogFragment dialogFragment = (DialogFragment) fragment;
@@ -77,11 +80,11 @@ public class ChangePwd extends DialogFragment {
                                 //기존 비밀번호와 일치하면 새 비밀번호 입력 edittext 활성화
                                 String inputPwd = beforePwd.getText().toString();
                                 if (inputPwd.equals(savedPwd)) {
-                                    confirm2.setText("확인 성공!");
+                                    confirm2.setText("확인되었습니다.\n새 비밀번호를 설정해주세요.");
                                     setEditPossible(afterPwd1);
                                     setEditPossible(afterPwd2);
                                 } else {
-                                    confirm2.setText("확인 실패");
+                                    confirm2.setText("일치하지 않습니다.\n다시 입력해주세요.");
                                 }
                             } else {
 
@@ -112,25 +115,19 @@ public class ChangePwd extends DialogFragment {
                     String newPwd1 = afterPwd1.getText().toString();
                     String newPwd2 = afterPwd2.getText().toString();
 
-                    if (newPwd1.equals(newPwd2)) {
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+                    if(newPwd1.equals("")){
+                        Toast.makeText(getContext(), "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    }else if (newPwd1.equals(newPwd2)) {
                         //새로운 비밀번호 업데이트
-                        user.updatePassword(newPwd1)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(getContext(), "비밀번호가 변경되었습니다.", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(getContext(), "비밀번호가 변경 오류", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-
+                        Toast.makeText(getContext(), "비밀번호가 변경되었습니다.", Toast.LENGTH_SHORT).show();
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        user.updatePassword(newPwd1);
                         uidRef1.child("password").setValue(newPwd1); //새로운 비밀번호 파이어베이스에 저장
                         dialogFragment.dismiss();
-                    } else {
+
+                        Intent intent = new Intent(getActivity(), MainActivity2.class);
+                        startActivity(intent);
+                    }else {
                         Toast.makeText(getContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -139,6 +136,7 @@ public class ChangePwd extends DialogFragment {
 
         }
         return view;
+
     }
 
     public void setEditPossible(EditText editText) {

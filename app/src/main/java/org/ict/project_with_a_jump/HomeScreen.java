@@ -23,7 +23,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class HomeScreen extends Fragment {
-    //Toolbar toolbar;
     TextView clock1, clock2;
     TextView placeName;
     TextView officeHour;
@@ -35,7 +34,6 @@ public class HomeScreen extends Fragment {
     String open, closed;
     int openCompare = 100;
     int closingCompare = 100;
-
 
     String[] title = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
 
@@ -66,7 +64,7 @@ public class HomeScreen extends Fragment {
 
         //오늘 날짜, 시간
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf1 = new SimpleDateFormat("MM월 dd일 (EE)");
+        SimpleDateFormat sdf1 = new SimpleDateFormat("M월 dd일 (EE)");
         SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm"); //영업시간과 비교할 형식
         SimpleDateFormat sdf3 = new SimpleDateFormat("a hh시 mm분 ss초"); //보여주는 방식
         String dateString = sdf1.format(cal.getTime()); //오늘 날짜
@@ -84,15 +82,12 @@ public class HomeScreen extends Fragment {
                     ManageAccount user = snapshot.getValue(ManageAccount.class);
                     String companyName = user.getCompanyName();
                     placeName.setText(companyName);
-                } else {
-                    placeName.setText("snapshot(placeName) is null");
                 }
-
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
-                placeName.setText("시설 이름 오류");
+
             }
         });
 
@@ -111,10 +106,7 @@ public class HomeScreen extends Fragment {
                     } else {
                         officeHour.setText("영업 시작 시간: " + open + "" + "\n영업 종료 시간: " + closed);
                     }
-                } else {
-                    officeHour.setText("snapshot(officeHour) is null");
                 }
-
             }
 
             @Override
@@ -156,10 +148,8 @@ public class HomeScreen extends Fragment {
         return nowString;
     }
 
-    // 현재시간,영업시간 비교하기
+    //현재시간,영업시간 비교하기
     public void showMessage(SimpleDateFormat sdf, String nowString) {
-        //시간 비교를 위해 String 타입의 시간->Date 타입으로 바꾸기
-
         try {
             if ((open.equals("")) && (open.equals(""))) {
                 openTime = null;
@@ -174,8 +164,6 @@ public class HomeScreen extends Fragment {
             e.printStackTrace();
         }
 
-
-        //현재시간,영업시간 비교
         if ((openTime != null) && (closingTime != null)) {
             openCompare = nowTime.compareTo(openTime);
             closingCompare = nowTime.compareTo(closingTime);
@@ -194,7 +182,7 @@ public class HomeScreen extends Fragment {
                 state.setText("영업이 시작되었습니다.");
             }
         } else {
-            state.setText("전자출입명부 작성 시간이 아닙니다!!");
+            state.setText("전자출입명부 작성 시간이 아닙니다.");
         }
     }
 }

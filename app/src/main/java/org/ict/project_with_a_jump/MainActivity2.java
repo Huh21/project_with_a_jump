@@ -68,7 +68,7 @@ public class MainActivity2 extends AppCompatActivity {
                                 public void onComplete(@NonNull @org.jetbrains.annotations.NotNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(MainActivity2.this, "로그인 성공", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(MainActivity2.this, HomeScreen.class);
+                                        Intent intent = new Intent(MainActivity2.this, HomeDefault.class);
                                         startActivity(intent);
                                     } else {
                                         Toast.makeText(MainActivity2.this, "로그인 오류", Toast.LENGTH_SHORT).show();

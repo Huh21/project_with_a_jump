@@ -61,6 +61,8 @@
         <activity android:name=".RegisterActivity4" />
         <activity android:name=".RegisterActivity3" />
         <activity android:name=".RegisterActivity" />
+        <activity android:name=".ChangePwdDialog"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".HomeScreen"
             android:configChanges="keyboardHidden|orientation|screenSize"

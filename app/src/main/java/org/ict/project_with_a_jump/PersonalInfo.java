@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,7 +54,6 @@ public class PersonalInfo extends Fragment {
         changePassword = view.findViewById(R.id.changePassword);
         logout = view.findViewById(R.id.logout);
 
-
         //파이어베이스로부터 개인 정보 가져오기
         mAuth = FirebaseAuth.getInstance();
         String uid = mAuth.getCurrentUser().getUid();
@@ -63,7 +63,7 @@ public class PersonalInfo extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot != null) {
-                    Manage userAccount = snapshot.getValue(Manage.class);
+                    ManageAccount userAccount = snapshot.getValue(ManageAccount.class);
                     String name = userAccount.getName();
                     String birth = userAccount.getBirth();
                     String emailId = userAccount.getEmailId();
@@ -94,7 +94,7 @@ public class PersonalInfo extends Fragment {
             public void onClick(View v) {
                 Bundle args = new Bundle();
                 args.putString("key", "value");
-                ChangePwd changePwdDialog = new ChangePwd();
+                ChangePwdDialog changePwdDialog = new ChangePwdDialog();
                 changePwdDialog.setArguments(args);
                 changePwdDialog.show(getActivity().getSupportFragmentManager(), "tag");
             }
@@ -109,7 +109,5 @@ public class PersonalInfo extends Fragment {
                 startActivity(intent);
             }
         });
-
     }
-
 }

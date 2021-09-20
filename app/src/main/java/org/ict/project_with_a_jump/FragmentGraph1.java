@@ -33,7 +33,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class FragmentGraph1 extends Fragment {
-    TextView nowDate, nowYear, nowMonth, number, total;
+    TextView nowDate1, nowDate2, nowYear, nowMonth, number, total;
     BarDataSet barDataSet;
     BarData barData;
     ArrayList values = new ArrayList(); //그래프 데이터 값
@@ -53,12 +53,15 @@ public class FragmentGraph1 extends Fragment {
         /* 해당 년도/월 나옴 */
         //nowYear= view.findViewById(R.id.nowYear);
         //nowMonth= view.findViewById(R.id.nowMonth);
-        nowDate = view.findViewById(R.id.nowDate);
+        nowDate1 = view.findViewById(R.id.nowDate1);
+        nowDate2 = view.findViewById(R.id.nowDate2);
+
         Calendar cal = Calendar.getInstance(new Locale("en", "US"));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy년\n  M월");
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy년");
         SimpleDateFormat sdf2 = new SimpleDateFormat("M월");
-        nowDate.setText(sdf.format(cal.getTime()));
+        nowDate1.setText(sdf1.format(cal.getTime()));
+        nowDate2.setText(sdf2.format(cal.getTime()));
         //nowYear.setText(sdf1.format(cal.getTime()));
         //nowMonth.setText(sdf2.format(cal.getTime()));
 
