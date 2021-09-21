@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <item name="button4" type="id" />
+    <item name="button3" type="id" />
+    <item name="editTextNumber" type="id" />
+    <item name="사용자register" type="id" />
 </resources>

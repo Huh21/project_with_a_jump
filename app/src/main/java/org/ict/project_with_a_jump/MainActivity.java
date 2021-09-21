@@ -2,13 +2,9 @@ package org.ict.project_with_a_jump;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -63,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
             }
          }
       });
+
 
       registerbut.setOnClickListener(new View.OnClickListener() {
          @Override
