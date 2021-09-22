@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
          }
 
-
       });
       nextbut.setOnClickListener(new View.OnClickListener() {
 

@@ -1,5 +1,6 @@
 package org.ict.project_with_a_jump;
 
+
 public class User {
     private String name; // 사용자의 이름
     private String num; // 사용자의 개인안심번호

@@ -27,7 +27,6 @@ public class subActivity extends AppCompatActivity {
     static final int SMS_SEND_PERMISSOW = 1;
     //안증번호 비교를 위한 쉐어드 저장
 
-
     String checkNum;
 
     @Override
