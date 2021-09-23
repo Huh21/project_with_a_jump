@@ -81,8 +81,8 @@
                 android:layout_marginRight="15dp"
                 android:focusable="false"
                 android:text="비밀번호 변경하기"
-                app:backgroundTint="#3F51B5"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                app:backgroundTint="#3F51B5" />
         </LinearLayout>
 
 
@@ -199,8 +199,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="로그아웃"
-                app:backgroundTint="#3F51B5"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                app:backgroundTint="#3F51B5" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

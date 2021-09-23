@@ -28,9 +28,9 @@ public class MainActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        login = (Button) findViewById(R.id.login);
-        email_login = (EditText) findViewById(R.id.email_login);
-        pwd_login = (EditText) findViewById(R.id.pwd_login);
+        login = findViewById(R.id.login);
+        email_login = findViewById(R.id.email_login);
+        pwd_login = findViewById(R.id.pwd_login);
 
         //firebaseauth 인스턴스 초기화
         firebaseAuth = FirebaseAuth.getInstance();
@@ -86,7 +86,7 @@ public class MainActivity2 extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity2.this, RegisterActivity2.class);
+                Intent intent = new Intent(MainActivity2.this, RegisterActivity.class);
                 startActivity(intent);
             }
         });

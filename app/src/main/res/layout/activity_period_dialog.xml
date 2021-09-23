@@ -146,8 +146,8 @@
                 android:gravity="center"
                 android:text="취소"
                 android:textColor="#FFFFFF"
-                app:backgroundTint="#3F51B5"
-                android:textSize="17dp" />
+                android:textSize="17dp"
+                app:backgroundTint="#3F51B5" />
 
             <Button
                 android:id="@+id/button_confirm"
@@ -160,8 +160,8 @@
                 android:gravity="center"
                 android:text="선택 완료"
                 android:textColor="#FFFFFF"
-                app:backgroundTint="#3F51B5"
-                android:textSize="17dp" />
+                android:textSize="17dp"
+                app:backgroundTint="#3F51B5" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

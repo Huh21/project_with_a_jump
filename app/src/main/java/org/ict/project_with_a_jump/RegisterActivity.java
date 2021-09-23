@@ -34,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 public class RegisterActivity extends AppCompatActivity {
     //인증번호
@@ -43,7 +44,6 @@ public class RegisterActivity extends AppCompatActivity {
     Button nextbutton, registerbutton, authentication, authenticationCheck;
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private EditText email_join, pwd_join;
-    private EditText phoneNumberAccess, Access;
     private EditText name_join, birth_join, daum_resultDetail_join, companyName_join;
     private TextView daum_result_join, daum_result2_join;
     private FirebaseAuth mFirebaseAuth;
@@ -61,14 +61,14 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        email_join = (EditText) findViewById(R.id.email_join);
-        pwd_join = (EditText) findViewById(R.id.pwd_join);
-        name_join = (EditText) findViewById(R.id.name_join);
-        birth_join = (EditText) findViewById(R.id.birth_join2);
-        daum_result_join = (TextView) findViewById(R.id.daum_result_join);
-        daum_result2_join = (TextView) findViewById(R.id.daum_result2_join);
-        daum_resultDetail_join = (EditText) findViewById(R.id.daum_resultDetail_join);
-        companyName_join = (EditText) findViewById(R.id.companyName_join);
+        email_join = findViewById(R.id.email_join);
+        pwd_join = findViewById(R.id.pwd_join);
+        name_join = findViewById(R.id.name_join);
+        birth_join = findViewById(R.id.birth_join2);
+        daum_result_join = findViewById(R.id.daum_result_join);
+        daum_result2_join = findViewById(R.id.daum_result2_join);
+        daum_resultDetail_join = findViewById(R.id.daum_resultDetail_join);
+        companyName_join = findViewById(R.id.companyName_join);
         registerbutton = findViewById(R.id.registerbutton);
         nextbutton = findViewById(R.id.nextbutton);
         authentication = findViewById(R.id.authentication);
@@ -268,6 +268,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                         //setvalue(): database에 insert(삽입)
                         mDatabaseRef.child(account.getGpsData()).setValue(account);
+                        mDatabaseRef.child(companyName).setValue(account);
 
                         Toast.makeText(RegisterActivity.this, "회원가입에 성공하셨습니다", Toast.LENGTH_SHORT).show();
                         nextPage = true;
@@ -321,16 +322,30 @@ public class RegisterActivity extends AppCompatActivity {
         intent.putExtra("gpsCheckData", gpsCheckData);
     }
 
-
     // 현재 위치의 주소 받아오는 메소드
     public String getGpsTracker() {
         gpsTracker = new GpsTracker(RegisterActivity.this);
 
-        double latitude = gpsTracker.getLatitude();
-        double longitude = gpsTracker.getLongitude();
+        String latitude = Double.toString(gpsTracker.getLatitude());
+        String longitude = Double.toString(gpsTracker.getLongitude());
 
-        String address = getCurrentAddress(latitude, longitude);
-        return address;
+        return searchRoadAddress(longitude, latitude); // 경도, 위도 순서
+    }
+
+    public String searchRoadAddress(String x, String y) {
+        GetJSONObjectTask get = new GetJSONObjectTask();
+        String road_address = "";
+
+        try {
+            road_address = get.execute().get();
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return road_address;
     }
 
     // onRequestPermissionsResult의 결과를 리턴받는 메소드

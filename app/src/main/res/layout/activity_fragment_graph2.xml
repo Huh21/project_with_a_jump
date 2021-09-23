@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -14,21 +13,21 @@
             android:id="@+id/chooseTerm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
             android:text="기간 선택"
             android:textSize="20dp"
-            app:backgroundTint="#3F51B5"/>
+            app:backgroundTint="#3F51B5" />
 
         <TextView
             android:id="@+id/term"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="선택된 기간 나오는 곳"
-            android:layout_marginTop="18dp"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="18dp"
             android:layout_marginRight="20dp"
-            android:textSize="23sp"/>
+            android:text="선택된 기간 나오는 곳"
+            android:textSize="23sp" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lineChart"

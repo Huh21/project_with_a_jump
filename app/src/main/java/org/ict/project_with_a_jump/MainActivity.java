@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,13 +27,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {
-    public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -82,31 +77,38 @@ public class MainActivity extends AppCompatActivity {
             textview_address.setText(getGpsTracker());
         }
 
-        Intent intentFromCertification = getIntent(); // 본인인증 화면으로부터 사용자명 받아오기
-        user_name.setText(intentFromCertification.getStringExtra("user_name"));
 
-        //Intent intentFromOwner = getIntent(); // 등록된 사업자 리스트 받아오기
-        // Facility facility = (Facility)intentFromOwner.getSerializableExtra("facility");
+        // 본인인증 화면으로부터 사용자명 받아오기
+        Intent intentFromCertification = getIntent();
+        user_name.setText(intentFromCertification.getStringExtra("user_name"));
+        String num = intentFromCertification.getStringExtra("user_num");// 개인안심번호
+        String address = intentFromCertification.getStringExtra("user_address");
+
 
         // 현재 위치로 찾기
         ShowLocationButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View arg0) {
                 textview_address.setText(getGpsTracker()); // 사용자의 현재 위치 보여줌
-                //String facilityName = findFacility("인천 부평구 원적로 361", "show");
-                String facilityName = "인천 부평구 원적로 361";
+                String facilityName = findFacility("인천광역시 부평구 원적로 362", "show");
 
                 if ((facilityName).equals("not found")) {
                     Toast.makeText(MainActivity.this, "현재 위치에 해당하는 시설을 찾을 수 없습니다.", Toast.LENGTH_LONG).show();
                 } else {
-                    // 현재 위치를 기반으로 명부를 가진 시설을 찾아서 시설명을 사용자에게 보여줌
-                    //Toast.makeText(MainActivity.this, facilityName + " 입장", Toast.LENGTH_LONG).show();
-                    Toast.makeText(MainActivity.this, "국민떡볶이 덕성여대점 입장", Toast.LENGTH_LONG).show();
+                    if (facilityName.equals("")) {
 
-                    // 해당 시설의 명부 화면으로 이동
-                    Intent intent = new Intent(getApplicationContext(), EntryActivity.class);
-                    //intent.putExtra("facilityName", facilityName);
-                    startActivity(intent);
+                    } else {
+                        Toast.makeText(MainActivity.this, facilityName + " 입장", Toast.LENGTH_LONG).show();
+
+                        // 해당 시설의 명부 화면으로 이동
+                        Intent intent = new Intent(getApplicationContext(), EntryActivity.class);
+                        intent.putExtra("facilityName", facilityName);
+                        intent.putExtra("user_num", num);
+                        intent.putExtra("user_name", user_name.getText().toString());
+                        intent.putExtra("user_address", address);
+                        startActivity(intent);
+                    }
                 }
             }
         });
@@ -120,20 +122,25 @@ public class MainActivity extends AppCompatActivity {
                 if (input.equals("")) { // 입력칸이 빈칸이라면
                     Toast.makeText(MainActivity.this, "시설명을 입력해주세요", Toast.LENGTH_LONG).show();
                 } else {
-                    //String facilityName = findFacility(input, "find");
-                    String facilityName = "인천 부평구 원적로 361";
+                    String facilityName = findFacility(input, "find");
 
                     if ((facilityName).equals("not found")) {
                         Toast.makeText(MainActivity.this, "해당 시설의 명부가 존재하지 않습니다.\n"
                                 + "담당자에게 문의하세요.", Toast.LENGTH_LONG).show();
                     } else {
-                        //Toast.makeText(MainActivity.this, facilityName + " 입장", Toast.LENGTH_LONG).show();
-                        Toast.makeText(MainActivity.this, "국민떡볶이 덕성여대점 입장", Toast.LENGTH_LONG).show();
+                        if (facilityName.equals("")) {
 
-                        // 해당 시설의 명부 화면으로 이동
-                        Intent intent = new Intent(getApplicationContext(), EntryActivity.class);
-                        //intent.putExtra("facilityName", facilityName);
-                        startActivity(intent);
+                        } else {
+                            Toast.makeText(MainActivity.this, facilityName + " 입장", Toast.LENGTH_LONG).show();
+
+                            // 해당 시설의 명부 화면으로 이동
+                            Intent intent = new Intent(getApplicationContext(), EntryActivity.class);
+                            intent.putExtra("facilityName", facilityName);
+                            intent.putExtra("user_num", num);
+                            intent.putExtra("user_name", user_name.getText().toString());
+                            intent.putExtra("user_address", address);
+                            startActivity(intent);
+                        }
                     }
                 }
             }
@@ -151,14 +158,17 @@ public class MainActivity extends AppCompatActivity {
         /* // 사용자가 입장한 시설 명부 기록 확인
         listBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-
+                Intent intent = new Intent(this, checkListActivity.class);
+                intent.putExtra("user_num", num);
+                startActivity(intent);
             }
         });
 
         // 사용자 정보 수정 처리
         modifyBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-
+                Intent intent = new Intent(this, Activity.class);
+                startActivity(intent);
             }
         }); */
 
@@ -222,59 +232,17 @@ public class MainActivity extends AppCompatActivity {
         alert2.show();
     }
 
-    public String modifyAddress(String address) {
-        if (!(address.indexOf("특별시") == -1)) {
-            address = address.replace("특별시", "");
-        }
-
-        if (!(address.indexOf("광역시") == -1)) {
-            address = address.replace("광역시", "");
-        }
-
-        if (!(address.indexOf("경기도") == -1)) {
-            address = address.replace("경기도", "경기");
-        }
-
-        if (!(address.indexOf("강원도") == -1)) {
-            address = address.replace("강원도", "강원");
-        }
-
-        if (!(address.indexOf("충청북도") == -1)) {
-            address = address.replace("충청북도", "충북");
-        }
-
-        if (!(address.indexOf("충청남도") == -1)) {
-            address = address.replace("충청남도", "충남");
-        }
-
-        if (!(address.indexOf("경상북도") == -1)) {
-            address = address.replace("경상북도", "경북");
-        }
-
-        if (!(address.indexOf("경상남도") == -1)) {
-            address.replace("경상남도", "경남");
-        }
-
-        if (!(address.indexOf("전라북도") == -1)) {
-            address = address.replace("전라북도", "전북");
-        }
-
-        if (!(address.indexOf("전라남도") == -1)) {
-            address.replace("전라남도", "전남");
-        }
-
-        return address;
-    }
-
     // 주소나 사용자의 입력값을 통해 시설명을 찾아주는 함수
     public String findFacility(String data, String who) {
         switch (who) {
             case "show":
                 DatabaseReference refer1 = reference.child("project_with_a_jump").child("ManageAccount");
-                refer1.child("daum1").equalTo(data).addListenerForSingleValueEvent(new ValueEventListener() {
+                refer1.child(data).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot != null) {
+                        Boolean check = snapshot.hasChildren();
+
+                        if (check) {
                             ManageAccount user = snapshot.getValue(ManageAccount.class);
                             facilityName = user.getCompanyName();
                         } else {
@@ -289,10 +257,9 @@ public class MainActivity extends AppCompatActivity {
                 });
                 break;
 
-
             case "find":
                 DatabaseReference refer2 = reference.child("project_with_a_jump").child("ManageAccount");
-                refer2.child("companyName").equalTo(data).addListenerForSingleValueEvent(new ValueEventListener() {
+                refer2.child(data).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot != null) {
@@ -310,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 break;
         }
+
 
         return facilityName;
     }
@@ -318,34 +286,26 @@ public class MainActivity extends AppCompatActivity {
     public String getGpsTracker() {
         gpsTracker = new GpsTracker(MainActivity.this);
 
-        double latitude = gpsTracker.getLatitude();
-        double longitude = gpsTracker.getLongitude();
+        String latitude = Double.toString(gpsTracker.getLatitude());
+        String longitude = Double.toString(gpsTracker.getLongitude());
 
-        String address = getCurrentAddress(latitude, longitude);
-        return address;
+        return searchRoadAddress(longitude, latitude); // 경도, 위도 순서
     }
 
-    // 사용자의 현재 위치와 데이터베이스 주소 비교하는 메소드
-    public boolean compareCurrentAddress(String gpsAddress) {
-        Boolean check = false;
+    public String searchRoadAddress(String x, String y) {
+        GetJSONObjectTask get = new GetJSONObjectTask();
+        String road_address = "";
 
-        reference.orderByChild("daum1").equalTo(gpsAddress).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String address = dataSnapshot.getValue().toString();
+        try {
+            road_address = get.execute().get();
 
-                if (!address.equals(gpsAddress)) {
-                    Toast.makeText(MainActivity.this, "현재 위치한 시설에 생성된 명부가 존재하지 않습니다.", Toast.LENGTH_LONG).show();
-                }
-            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
-
-        return true;
+        return road_address;
     }
 
     // onRequestPermissionsResult의 결과를 리턴받는 메소드
@@ -420,34 +380,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public String getCurrentAddress(double latitude, double longitude) {
 
-        //지오코더... 주소, 지명 => 위도, 경도 좌표로 변호나
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-
-        List<Address> addresses;
-
-        try {
-            addresses = geocoder.getFromLocation(
-                    latitude,
-                    longitude,
-                    5);
-        } catch (IOException ioException) {
-            //네트워크 문제
-            Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
-            return "지오코더 서비스 사용불가";
-        } catch (IllegalArgumentException illegalArgumentException) {
-            Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
-            return "잘못된 GPS 좌표";
-        }
-
-        if (addresses == null || addresses.size() == 0) {
-            Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show();
-            return "주소 미발견";
-        }
-        Address address = addresses.get(0);
-        return address.getAddressLine(0) + "\n";
-    }
 
     //여기부터는 GPS 활성화를 위한 메소드들
     private void showDialogForLocationServiceSetting() {
@@ -502,74 +435,4 @@ public class MainActivity extends AppCompatActivity {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
-
-        /*
-    public String findFacility(String address) {
-        // 시설 사업자 리스트 배열 변수와 getGpsTracker() 함수의 리턴값을 비교하여 해당 주소의 시설 명부가 있는지 확인
-        Intent intent = getIntent(); // 시설 사업자 명부 데이터 수신
-        ArrayList<facilityList> list = (ArrayList<facilityList>) intent.getSerializableExtra("list");
-        facilityList findAddress = null;
-        for (facilityList f : list) {
-            // GPS로 확인한 사용자의 위치 정보를 통해 해당 시설의 출입 명부가 존재하는지 찾기
-            if (f.equals(address)) {
-                findAddress = f;
-                Toast.makeText(MainActivity.this, findAddress.name + " 명부 입장", Toast.LENGTH_LONG).show();
-                facility = findAddress.name;
-                // 다음 화면으로 최종 시설 정보 전달
-                Intent secIntent = new Intent(this,.class);
-                secIntent.putExtra("facility", facility);
-                startActivity(secIntent);
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
- */
-
-
-    /*
-    //GPS 권한이 허용되었다면 해당 시설에 출입명부가 존재하는지 확인
-    public String checkAccessList(String address) {
-        // 해당 시설이 없다면 알림 띄우기
-        // 이 기능은 나중에 사용자가 자동으로 연결 버튼을 누르는 경우, 최초 1번만 제공됨
-        if (!findAddress(address)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("현재 위치에 해당하는\n" + "시설 명부가 존재하지 않습니다.");
-            builder.setPositiveButton("닫기", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                }
-            });
-            builder.setNeutralButton("재검색", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    // 2차 검색 실패 시, 사용자에게 직접 시설명을 입력받음
-                    if (!findAddress(address)) {
-                        Toast.makeText(MainActivity.this, "재검색에 실패하였습니다.\n"+
-                                   "시설명을 직접 입력해주세요.", Toast.LENGTH_LONG).show();
-                        AlertDialog.Builder builder2 = new AlertDialog.Builder(MainActivity.this);
-                        builder2.setTitle("시설명 직접 입력");
-                        builder2.setMessage("아래 예시와 같은 형식으로 시설명을 입력해주세요.\n" + "줄임말 X, 띄어쓰기 필수!");
-                        EditText editText = (EditText)findViewById(R.id.editText);
-                        //builder2.setView(editText);
-                        builder2.setPositiveButton("검색", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                // 시설명 입력 받은 것을 토대로 재조사
-                                if(!findAddress(editText.getText().toString())) {
-                                    Toast.makeText(MainActivity.this, "해당 시설에는 생성된 명부가 존재하지 않습니다.\n" +
-                                            "시설 담당자에게 문의해주세요.", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-                        builder2.create().show();
-                    }
-                }
-            });
-            builder.create().show();
-        }
-        return "";
-    }
-    */
 }

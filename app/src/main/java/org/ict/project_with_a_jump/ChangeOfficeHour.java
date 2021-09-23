@@ -1,14 +1,12 @@
 package org.ict.project_with_a_jump;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -33,7 +31,7 @@ public class ChangeOfficeHour extends Fragment {
     String[] days = new String[14];
     String[] dayName = {"mon1", "mon2", "tue1", "tue2", "wed1", "wed2", "thu1", "thu2", "fri1", "fri2", "sat1", "sat2", "sun1", "sun2"};
     String[] title = {"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
-    boolean[] result= new boolean[7];
+    boolean[] result = new boolean[7];
 
     DatabaseReference rootRef;
     DatabaseReference uidRef;
@@ -107,16 +105,16 @@ public class ChangeOfficeHour extends Fragment {
 
                 //영업 시작, 종료 시간이 모두 입력되거나 모두 입력되지 않은 경우(휴무)에만 데이터 저장
                 for (int i = 0; i < days.length; i += 2) {
-                    if (((days[i].equals("")) && (days[i+1].equals("")))||(!(days[i].equals(""))) && (!(days[i+1].equals("")))){
-                        result[i/2]=true;
+                    if (((days[i].equals("")) && (days[i + 1].equals(""))) || (!(days[i].equals(""))) && (!(days[i + 1].equals("")))) {
+                        result[i / 2] = true;
                         saveInfo(days[i], days[i + 1], dayName[i], dayName[i + 1], title[i / 2]);
-                    }else{
-                        result[i/2]=false;
+                    } else {
+                        result[i / 2] = false;
                     }
                 }
 
-                for(int j=0; j<result.length; j++){
-                    if(result[j]==false){
+                for (int j = 0; j < result.length; j++) {
+                    if (result[j] == false) {
                         Toast.makeText(getContext(), "영업 시작 시간과 종료 시간을 모두 입력해주세요.", Toast.LENGTH_SHORT).show();
                         return;
                     }

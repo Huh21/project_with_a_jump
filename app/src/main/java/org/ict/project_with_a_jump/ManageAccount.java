@@ -18,6 +18,10 @@ public class ManageAccount {
     public ManageAccount() {
     }
 
+    public ManageAccount(Object object) {
+
+    }
+
     public ManageAccount(String birth, String companyName, String daum1, String daum2, String daum3, String gpsData, String emailId, String idToken, String name, String password) {
         this.birth = birth;
         this.companyName = companyName;
