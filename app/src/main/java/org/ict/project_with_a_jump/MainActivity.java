@@ -9,8 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     Dialog dialog;
     TextView Day;
+    EditText NowPlace, Num;
 
     //현재 시간
     long now = System.currentTimeMillis();
@@ -26,10 +31,19 @@ public class MainActivity extends AppCompatActivity {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd / HH:mm:ss");
     String formatDate = dateFormat.format(date);
 
+    //Database
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference databaseReference = database.getReference();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //findViewById
+        Num = (EditText) findViewById(R.id.UserNum);
+        Day = (TextView) findViewById(R.id.Day);
+        NowPlace = (EditText) findViewById(R.id.NowPlace);
 
         //inflate
         LayoutInflater inflater = getLayoutInflater();
@@ -59,9 +73,20 @@ public class MainActivity extends AppCompatActivity {
         yesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //toast 메시지
                 Toast.makeText(getApplicationContext(), "명부가 작성되었습니다",
                         Toast.LENGTH_SHORT).show();
 
+                //동의 버튼 누르면 database에 데이터 저장
+                EntryList entryList = new EntryList(NowPlace.getText().toString(),Day.getText().toString());
+
+                databaseReference
+                        .child("EntryList")
+                        .child(Num.getText().toString())
+                        .push()
+                        .setValue(entryList);
+
+                //다음 액티비티와 연결
                 Intent intent = new Intent(MainActivity.this, MainActivity2.class);
                 startActivity(intent);
             }
