@@ -1,6 +1,9 @@
 package org.ict.project_with_a_jump;
 
 import android.os.AsyncTask;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,6 +34,7 @@ public class GetJSONObjectTask extends AsyncTask<String, String, String> {
         super.onPreExecute();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected String doInBackground(String... params) {
         String value = "";

@@ -45,7 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private EditText email_join, pwd_join;
     private EditText name_join, birth_join, daum_resultDetail_join, companyName_join;
-    private TextView daum_result_join, daum_result2_join;
+    private TextView daum_result_join, daum_result2_join, daum_result3_join;
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference mDatabaseRef;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -67,6 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
         birth_join = findViewById(R.id.birth_join2);
         daum_result_join = findViewById(R.id.daum_result_join);
         daum_result2_join = findViewById(R.id.daum_result2_join);
+        daum_result3_join = findViewById(R.id.daum_result3_join);
         daum_resultDetail_join = findViewById(R.id.daum_resultDetail_join);
         companyName_join = findViewById(R.id.companyName_join);
         registerbutton = findViewById(R.id.registerbutton);
@@ -202,6 +203,7 @@ public class RegisterActivity extends AppCompatActivity {
         String daum1 = daum_result_join.getText().toString();
         String daum2 = daum_resultDetail_join.getText().toString();
         String daum3 = daum_result2_join.getText().toString();
+        String daum4 = daum_result3_join.getText().toString();
         String companyName = companyName_join.getText().toString();
 
         //체크하기
@@ -257,6 +259,7 @@ public class RegisterActivity extends AppCompatActivity {
                         account.setDaum1(daum1);
                         account.setDaum2(daum2);
                         account.setDaum3(daum3);
+                        account.setDaum4(daum4);
                         account.setCompanyName(companyName);
 
                         // 위치 인증을 통해 얻은 사업장 주소
@@ -530,15 +533,25 @@ public class RegisterActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     String data = intent.getExtras().getString("data");
                     Log.d("data", data);
+
                     int idx = data.indexOf(",");
                     //data2 = 우편번호
                     String data2 = data.substring(0, idx);
                     Log.d("data2", data2);
+
                     String cutData = data.substring(idx + 1).trim();
                     Log.d("cutData", cutData);
+
+                    int idx2 = cutData.indexOf("(");
+                    String cutData2 = cutData.substring(0, idx2);
+                    Log.d("cutData2", cutData2);
+                    String cutData3 = cutData.substring(idx2).trim();
+                    Log.d("cutData3", cutData3);
+
                     if (data != null) {
                         daum_result_join.setText(cutData);
                         daum_result2_join.setText(data2);
+                        daum_result3_join.setText(cutData3);
                     }
                 }
                 break;

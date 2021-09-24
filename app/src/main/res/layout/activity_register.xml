@@ -175,13 +175,29 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
-            <TextView
-                android:id="@+id/daum_result2_join"
-                android:layout_width="200dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:hint="우편번호가 나타나는 곳" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/daum_result2_join"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:hint="우편번호가 나타나는 곳" />
+
+                <TextView
+                    android:id="@+id/daum_result3_join"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:hint="주소가 나타나는 곳" />
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/daum_resultDetail_join"
@@ -264,4 +280,3 @@
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
-

@@ -9,6 +9,7 @@ public class ManageAccount {
     private String daum1;
     private String daum2;
     private String daum3;
+    private String daum4; // 도로명 주소의 '()' 부분
     private String gpsData; // 위치 인증을 통해 얻은 사업장 주소
     private String emailId;
     private String idToken;     //Firebase Uid(고유 토큰정보)
@@ -22,12 +23,13 @@ public class ManageAccount {
 
     }
 
-    public ManageAccount(String birth, String companyName, String daum1, String daum2, String daum3, String gpsData, String emailId, String idToken, String name, String password) {
+    public ManageAccount(String birth, String companyName, String daum1, String daum2, String daum3, String daum4, String gpsData, String emailId, String idToken, String name, String password) {
         this.birth = birth;
         this.companyName = companyName;
         this.daum1 = daum1;
         this.daum2 = daum2;
         this.daum3 = daum3;
+        this.daum4 = daum4;
         this.gpsData = gpsData;
         this.emailId = emailId;
         this.idToken = idToken;
@@ -97,6 +99,14 @@ public class ManageAccount {
 
     public void setDaum3(String daum3) {
         this.daum3 = daum3;
+    }
+
+    public String getDaum4() {
+        return daum4;
+    }
+
+    public void setDaum4(String daum4) {
+        this.daum4 = daum4;
     }
 
     public String getGpsData() {
