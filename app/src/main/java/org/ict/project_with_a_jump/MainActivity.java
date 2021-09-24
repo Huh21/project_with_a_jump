@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     Dialog dialog;
     TextView Day;
-    EditText NowPlace, Num;
+    EditText NowPlace, UserNum, Name, LivePlace;
 
     //현재 시간
     long now = System.currentTimeMillis();
@@ -41,10 +41,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //findViewById
-        Num = (EditText) findViewById(R.id.UserNum);
+        UserNum = (EditText) findViewById(R.id.UserNum);
         Day = (TextView) findViewById(R.id.Day);
         NowPlace = (EditText) findViewById(R.id.NowPlace);
+        Name = (EditText) findViewById(R.id.Name);
+        LivePlace = (EditText) findViewById(R.id.LivePlace);
 
+        //intent
+        Intent intent = getIntent();
+        String user_name = intent.getStringExtra("user_name");
+        Name.setText(user_name);
+        String user_num = intent.getStringExtra("user_num");
+        UserNum.setText(user_num);
+        String user_address = intent.getStringExtra("user_address");
+        LivePlace.setText(user_address);
+        String facilityName = intent.getStringExtra("facilityName");
+        NowPlace.setText(facilityName);
         //inflate
         LayoutInflater inflater = getLayoutInflater();
         View v1 = inflater.inflate(R.layout.dialog, null);
@@ -82,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
                 databaseReference
                         .child("EntryList")
-                        .child(Num.getText().toString())
+                        .child(UserNum.getText().toString())
                         .push()
                         .setValue(entryList);
 
