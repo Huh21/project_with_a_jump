@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
     private Button modifyBtn;
     private CheckBox auto_check;
 
+    //private int showCount = 0;
+    //private int findCount = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,10 +94,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 textview_address.setText(getGpsTracker()); // 사용자의 현재 위치 보여줌
-                String facilityName = findFacility("인천광역시 부평구 원적로 362", "show");
+                String facilityName = findFacility("인천광역시 부평구 원적로 362");
 
                 if ((facilityName).equals("not found")) {
                     Toast.makeText(MainActivity.this, "현재 위치에 해당하는 시설을 찾을 수 없습니다.", Toast.LENGTH_LONG).show();
+
                 } else {
                     if (facilityName.equals("")) {
 
@@ -121,14 +125,18 @@ public class MainActivity extends AppCompatActivity {
 
                 if (input.equals("")) { // 입력칸이 빈칸이라면
                     Toast.makeText(MainActivity.this, "시설명을 입력해주세요", Toast.LENGTH_LONG).show();
+
                 } else {
-                    String facilityName = findFacility(input, "find");
+                    String facilityName = findFacility(input);
 
                     if ((facilityName).equals("not found")) {
                         Toast.makeText(MainActivity.this, "해당 시설의 명부가 존재하지 않습니다.\n"
                                 + "담당자에게 문의하세요.", Toast.LENGTH_LONG).show();
+
                     } else {
                         if (facilityName.equals("")) {
+                            facilityName = findFacility(input);
+                            Toast.makeText(MainActivity.this, "...", Toast.LENGTH_LONG).show();
 
                         } else {
                             Toast.makeText(MainActivity.this, facilityName + " 입장", Toast.LENGTH_LONG).show();
@@ -233,51 +241,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 주소나 사용자의 입력값을 통해 시설명을 찾아주는 함수
-    public String findFacility(String data, String who) {
-        switch (who) {
-            case "show":
-                DatabaseReference refer1 = reference.child("project_with_a_jump").child("ManageAccount");
-                refer1.child(data).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Boolean check = snapshot.hasChildren();
+    public String findFacility(String data) {
+        DatabaseReference refer1 = reference.child("project_with_a_jump").child("ManageAccount");
+        refer1.child(data).addListenerForSingleValueEvent(new ValueEventListener() {
 
-                        if (check) {
-                            ManageAccount user = snapshot.getValue(ManageAccount.class);
-                            facilityName = user.getCompanyName();
-                        } else {
-                            facilityName = "not found";
-                        }
-                    }
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Boolean check = snapshot.hasChildren();
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        throw databaseError.toException();
-                    }
-                });
-                break;
+                int size = (int) snapshot.getChildrenCount();
+                if (size != 0) {
+                    ManageAccount user = snapshot.getValue(ManageAccount.class);
+                    facilityName = user.getCompanyName();
 
-            case "find":
-                DatabaseReference refer2 = reference.child("project_with_a_jump").child("ManageAccount");
-                refer2.child(data).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot != null) {
-                            ManageAccount user = snapshot.getValue(ManageAccount.class);
-                            facilityName = user.getCompanyName();
-                        } else {
-                            facilityName = "not found";
-                        }
-                    }
+                } else {
+                    facilityName = "not found";
+                }
+            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        throw databaseError.toException();
-                    }
-                });
-                break;
-        }
-
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
 
         return facilityName;
     }
