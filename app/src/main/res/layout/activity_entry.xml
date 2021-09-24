@@ -18,10 +18,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:gravity="center"
-            android:textSize="30sp"
             android:text="출입명부"
             android:textColor="#232323"
+            android:textSize="30sp"
+            android:gravity="center"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:layout_weight="1"
-                android:enabled="false"
+                android:enabled="true"
                 android:hint="ex) 양예지" />
 
         </LinearLayout>
@@ -54,21 +54,21 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="157dp"
+                android:layout_width="218dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:layout_weight="1"
-                android:text="전화번호"
+                android:text="개인안심번호"
                 android:textSize="17sp" />
 
             <EditText
-                android:id="@+id/PhoneNumber"
+                android:id="@+id/UserNum"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:layout_weight="1"
-                android:enabled="false"
-                android:hint="ex) 010-1234-5678" />
+                android:enabled="true"
+                android:hint="ex) 20가21나" />
 
         </LinearLayout>
 
@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:layout_weight="1"
-                android:enabled="false"
+                android:enabled="true"
                 android:hint="ex) 서울특별시 도봉구 123-4" />
 
         </LinearLayout>
@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:layout_weight="1"
-                android:enabled="false"
+                android:enabled="true"
                 android:hint="ex) 국민떡볶이 덕성여대점" />
 
         </LinearLayout>

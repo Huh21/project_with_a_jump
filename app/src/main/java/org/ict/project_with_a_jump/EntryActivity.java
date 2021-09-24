@@ -3,7 +3,6 @@ package org.ict.project_with_a_jump;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -18,18 +17,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class EntryActivity extends AppCompatActivity {
     Dialog dialog;
     TextView Day;
-
-    //사업자 전자출입명부 firebase 연결
-    private final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private final DatabaseReference databaseReference = database.getReference("project_with_a_jump").child("ManageList");
-    EditText Name, PhoneNumber, LivePlace, NowPlace, Temperature;
+    EditText NowPlace, UserNum, Name, LivePlace;
 
     //현재 시간
     long now = System.currentTimeMillis();
@@ -37,21 +30,35 @@ public class EntryActivity extends AppCompatActivity {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd / HH:mm:ss");
     String formatDate = dateFormat.format(date);
 
+    //Database
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference databaseReference = database.getReference();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_entry);
+        setContentView(R.layout.activity_main);
 
+        //findViewById
+        UserNum = findViewById(R.id.UserNum);
+        Day = findViewById(R.id.Day);
+        NowPlace = findViewById(R.id.NowPlace);
+        Name = findViewById(R.id.Name);
+        LivePlace = findViewById(R.id.LivePlace);
+
+        //intent
+        Intent intent = getIntent();
+        String user_name = intent.getStringExtra("user_name");
+        Name.setText(user_name);
+        String user_num = intent.getStringExtra("user_num");
+        UserNum.setText(user_num);
+        String user_address = intent.getStringExtra("user_address");
+        LivePlace.setText(user_address);
+        String facilityName = intent.getStringExtra("facilityName");
+        NowPlace.setText(facilityName);
         //inflate
         LayoutInflater inflater = getLayoutInflater();
         View v1 = inflater.inflate(R.layout.dialog, null);
-
-        Day = (TextView) findViewById(R.id.Day);
-        Name = (EditText) findViewById(R.id.Name);
-        PhoneNumber = (EditText) findViewById(R.id.PhoneNumber);
-        LivePlace = (EditText) findViewById(R.id.LivePlace);
-        Temperature = (EditText) findViewById(R.id.Temperature);
-        NowPlace = (EditText) findViewById(R.id.NowPlace);
 
         //팝업창
         dialog = new Dialog(EntryActivity.this);
@@ -65,8 +72,9 @@ public class EntryActivity extends AppCompatActivity {
             }
         });
         //시간 출력
-        Day = (TextView) findViewById(R.id.Day);
+        Day = findViewById(R.id.Day);
         Day.setText(formatDate);
+
     }
 
     public void showDialog() {
@@ -77,39 +85,21 @@ public class EntryActivity extends AppCompatActivity {
         yesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //toast 메시지
                 Toast.makeText(getApplicationContext(), "명부가 작성되었습니다",
                         Toast.LENGTH_SHORT).show();
 
-                /* 사업자 전자출입명부 */
-                //현재 날짜 가져오기
-                Date currentTime = Calendar.getInstance().getTime();
-                SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.getDefault());
-                SimpleDateFormat monthFormat = new SimpleDateFormat("MM", Locale.getDefault());
-                SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
-
-                String year = yearFormat.format(currentTime);
-                String month = monthFormat.format(currentTime);
-                String day = dayFormat.format(currentTime);
-
-                Log.d("DAY", year + month + day);
-
-                //Toast.makeText(getApplicationContext(), "명부가 작성되었습니다", Toast.LENGTH_SHORT).show();
-
-                FirebasePost firebasePost = new FirebasePost();
-                firebasePost.setDate(Day.getText().toString());
-                firebasePost.setName1(Name.getText().toString());
-                firebasePost.setphonenumber(PhoneNumber.getText().toString());
-                firebasePost.sethome(LivePlace.getText().toString());
-                firebasePost.settemperature(Temperature.getText().toString());
+                //동의 버튼 누르면 database에 데이터 저장
+                EntryList entryList = new EntryList(NowPlace.getText().toString(), Day.getText().toString());
 
                 databaseReference
-                        .child(NowPlace.getText().toString())
-                        .child(year + "년" + month + "월")
-                        .child(day + "일")
-                        .child(Name.getText().toString()).setValue(firebasePost);
+                        .child("EntryList")
+                        .child(UserNum.getText().toString())
+                        .push()
+                        .setValue(entryList);
 
-
-                Intent intent = new Intent(EntryActivity.this, EntryActivity2.class);
+                //다음 액티비티와 연결
+                Intent intent = new Intent(EntryActivity.this, MainActivity2.class);
                 startActivity(intent);
             }
         });
