@@ -55,7 +55,7 @@ public class EntryActivity extends AppCompatActivity {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd / HH:mm:ss");
     SimpleDateFormat dateFormat2 = new SimpleDateFormat("HH:mm");
     String formatDate = dateFormat.format(date);
-    String nowString= dateFormat2.format(date);
+    String nowString = dateFormat2.format(date);
 
     EditText NowPlace, UserNum, Name, LivePlace, Temperature;
 
@@ -124,7 +124,7 @@ public class EntryActivity extends AppCompatActivity {
 
                 /* 사업자 전자출입명부 */
                 //현재 날짜 가져오기
-                Calendar cal= Calendar.getInstance();
+                Calendar cal = Calendar.getInstance();
                 Date currentTime = cal.getTime();
                 SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.getDefault());
                 SimpleDateFormat monthFormat = new SimpleDateFormat("MM", Locale.getDefault());
@@ -154,8 +154,8 @@ public class EntryActivity extends AppCompatActivity {
                             }
 
                             //시설 영업시간(open,closed)과 현재시간 비교
-                            int possible= checkTime(open, closed);
-                            if(possible==1){
+                            int possible = checkTime(open, closed);
+                            if (possible == 1) {
                                 FirebasePost firebasePost = new FirebasePost();
                                 firebasePost.setDate(Day.getText().toString());
                                 firebasePost.setName1(user_name);
@@ -170,7 +170,7 @@ public class EntryActivity extends AppCompatActivity {
                                         .child(user_name).setValue(firebasePost);
 
                                 Toast.makeText(getApplicationContext(), "명부가 작성되었습니다", Toast.LENGTH_SHORT).show();
-                            }else{
+                            } else {
                                 Toast.makeText(getApplicationContext(), "명부를 작성할 수 없습니다.\n시설 영업시간이 아닙니다.", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -187,10 +187,13 @@ public class EntryActivity extends AppCompatActivity {
                 EntryList entryList = new EntryList(NowPlace.getText().toString(), Day.getText().toString());
 
                 databaseReference3
+                        .child("project_with_a_jump")
                         .child("EntryList")
                         .child(UserNum.getText().toString())
-                        .push()
+                        .child(Day.getText().toString())
                         .setValue(entryList);
+
+                finish();
             }
         });
 
@@ -204,7 +207,7 @@ public class EntryActivity extends AppCompatActivity {
     }
 
     //명부 작성 시간이 해당 시설 영업시간 내인지 확인
-    public int checkTime(String start, String end){
+    public int checkTime(String start, String end) {
         try {
             nowTime = dateFormat2.parse(nowString);
             openTime = dateFormat2.parse(start);
@@ -219,7 +222,7 @@ public class EntryActivity extends AppCompatActivity {
         if (openCompare > 0) {
             if (closingCompare < 0) {
                 return 1;
-            }else{
+            } else {
                 return 0;
             }
         } else if (openCompare < 0) {

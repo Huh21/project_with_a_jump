@@ -27,16 +27,16 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Random;
 
-public class CertifyActivity extends AppCompatActivity {
+public class ReCertiftActivity extends AppCompatActivity {
     static final int SMS_SEND_PERMISSOW = 1;
-    private final String Validation = "^.(?=.*[0-9])(?=.*[0-9ㄱ-ㅎ가-힣]).*$";
+
     // 회원가입
     Button registerbut;
     // sms
     EditText user_pnumber;
     Button sendSMSBt;
     EditText inputCheckNum;
-    Button checkBt;
+    Button checkBt, returnbut;
     // 자동 로그인 처리
     SharedPreferences auto;
     String autoName;
@@ -76,12 +76,14 @@ public class CertifyActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_certify);
+        setContentView(R.layout.activity_recertift);
+
 
         sendSMSBt = findViewById(R.id.send_sms_button);
         user_pnumber = findViewById(R.id.user_pnumber);
         inputCheckNum = findViewById(R.id.input_check_num);
         checkBt = findViewById(R.id.check_button4);
+        returnbut = findViewById(R.id.returnbut);
 
         user_name = findViewById(R.id.user_name);
         user_ad = findViewById(R.id.user_ad);
@@ -97,15 +99,19 @@ public class CertifyActivity extends AppCompatActivity {
         autoAddress = auto.getString("autoAddress", null);
 
 
-        if (autoName != null || autoNum != null || autoAddress != null) {
-            // 사용자 홈 화면으로 사용자 기본 정보 전달
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra("user_name", autoName);
-            intent.putExtra("user_num", autoNum);
-            intent.putExtra("user_address", autoAddress);
-            startActivity(intent);
-            finish();
-        }
+        // Main 액티비티에서 전달 받기
+        Intent intentt = getIntent();
+        String name = intentt.getStringExtra("user_name");
+        String num = intentt.getStringExtra("user_num");
+        String address = intentt.getStringExtra("user_address");
+
+        user_name.setText(name);
+        user_ad.setText(address);
+        user_ce.setText(num);
+
+        //
+        //
+
 
         /***
          * 문자 보내기 권한 확인
@@ -131,6 +137,16 @@ public class CertifyActivity extends AppCompatActivity {
             }
         });
 
+        // 초기화 버튼
+        returnbut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent returnBtn = new Intent(getApplicationContext(), ResetActivity.class);
+                startActivity(returnBtn);
+                finish();
+            }
+        });
+
         registerbut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,67 +154,74 @@ public class CertifyActivity extends AppCompatActivity {
                 String num = user_ce.getText().toString();
                 String address = user_ad.getText().toString();
 
-
-                if (name.isEmpty() || num.isEmpty() || address.isEmpty()) {
-                    if (name.isEmpty()) {
-                        Toast.makeText(CertifyActivity.this, "이름을 입력하세요", Toast.LENGTH_SHORT).show();
-                    }
-
-                    if (address.isEmpty()) {
-                        Toast.makeText(CertifyActivity.this, "주소를 입력하세요\n예) 서울특별시 도봉구 쌍문2동", Toast.LENGTH_SHORT).show();
-                    }
-
-                    if (num.isEmpty()) {
-                        Toast.makeText(CertifyActivity.this, "개인안심번호를 입력하세요", Toast.LENGTH_SHORT).show();
-                    }
+                if (!check) {
+                    Toast.makeText(ReCertiftActivity.this, "본인인증이 이루어져야 정보가 수정됩니다", Toast.LENGTH_SHORT).show();
 
                 } else {
+                    if (name.isEmpty() || num.isEmpty() || address.isEmpty()) {
+                        if (name.isEmpty()) {
+                            Toast.makeText(ReCertiftActivity.this, "이름을 입력하세요", Toast.LENGTH_SHORT).show();
+                        }
 
-                    //Firebase 데이터 저장
-                    if (check == true) {
-                        UserAccount User = new UserAccount();
-                        User.setName(name);
-                        User.setAddress(address);
-                        User.setNum(num);
+                        if (address.isEmpty()) {
+                            Toast.makeText(ReCertiftActivity.this, "주소를 입력하세요\n예) 서울특별시 도봉구 쌍문2동", Toast.LENGTH_SHORT).show();
+                        }
 
-                        //setvalue(): database에 insert(삽입)
-                        mDatabaseRef.child(num).setValue(User);
-
-                        mDatabaseRef.child(num).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (snapshot != null) {
-                                    Toast.makeText(CertifyActivity.this, "계정이 등록되었습니다", Toast.LENGTH_SHORT).show();
-
-                                    SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = auto.edit();
-                                    editor.putString("autoName", name);
-                                    editor.putString("autoNum", num);
-                                    editor.putString("autoAddress", address);
-                                    editor.commit();
-
-                                    // 사용자 홈 화면으로 사용자 기본 정보 전달
-                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                    intent.putExtra("user_name", name);
-                                    intent.putExtra("user_num", num);
-                                    intent.putExtra("user_address", address);
-                                    startActivity(intent);
-                                    finish();
-
-                                } else {
-                                    Toast.makeText(CertifyActivity.this, "계정 등록에 실패하셨습니다", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                throw databaseError.toException();
-                            }
-                        });
+                        if (num.isEmpty()) {
+                            Toast.makeText(ReCertiftActivity.this, "개인안심번호를 입력하세요", Toast.LENGTH_SHORT).show();
+                        }
 
                     } else {
-                        Toast.makeText(CertifyActivity.this, "휴대폰 번호 인증이 이뤄지지 않았습니다\n" +
-                                "인증을 시도해주세요", Toast.LENGTH_SHORT).show();
+
+                        //Firebase 데이터 저장
+                        if (check == true) {
+                            UserAccount User = new UserAccount();
+                            User.setName(name);
+                            User.setAddress(address);
+                            User.setNum(num);
+
+                            //setvalue(): database에 insert(삽입)
+                            mDatabaseRef.child(num).setValue(User);
+
+                            //
+                            //파이어베이스로부터 개인 정보 가져오기
+
+                            mDatabaseRef.child(num).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot != null) {
+                                        Toast.makeText(ReCertiftActivity.this, "정보가 수정되었습니다.", Toast.LENGTH_SHORT).show();
+
+
+                                        SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = auto.edit();
+                                        editor.putString("autoName", name);
+                                        editor.putString("autoNum", num);
+                                        editor.putString("autoAddress", address);
+                                        editor.commit();
+
+                                        // 사용자 홈 화면으로 사용자 기본 정보 전달
+                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                        intent.putExtra("user_name", name);
+                                        intent.putExtra("user_num", num);
+                                        intent.putExtra("user_address", address);
+                                        startActivity(intent);
+
+                                    } else {
+                                        Toast.makeText(ReCertiftActivity.this, "정보 수정에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    throw databaseError.toException();
+                                }
+                            });
+
+                        } else {
+                            Toast.makeText(ReCertiftActivity.this, "휴대폰 번호 인증이 이뤄지지 않았습니다\n" +
+                                    "인증을 시도해주세요", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             }
@@ -239,4 +262,5 @@ public class CertifyActivity extends AppCompatActivity {
 
         Toast.makeText(getBaseContext(), "문자 메세지를 확인해주세요", Toast.LENGTH_SHORT).show();
     }
+
 }

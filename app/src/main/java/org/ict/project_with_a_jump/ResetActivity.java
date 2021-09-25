@@ -27,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Random;
 
-public class CertifyActivity extends AppCompatActivity {
+public class ResetActivity extends AppCompatActivity {
     static final int SMS_SEND_PERMISSOW = 1;
     private final String Validation = "^.(?=.*[0-9])(?=.*[0-9ㄱ-ㅎ가-힣]).*$";
     // 회원가입
@@ -76,7 +76,7 @@ public class CertifyActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_certify);
+        setContentView(R.layout.activity_reset);
 
         sendSMSBt = findViewById(R.id.send_sms_button);
         user_pnumber = findViewById(R.id.user_pnumber);
@@ -96,16 +96,6 @@ public class CertifyActivity extends AppCompatActivity {
         autoNum = auto.getString("autoNum", null);
         autoAddress = auto.getString("autoAddress", null);
 
-
-        if (autoName != null || autoNum != null || autoAddress != null) {
-            // 사용자 홈 화면으로 사용자 기본 정보 전달
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra("user_name", autoName);
-            intent.putExtra("user_num", autoNum);
-            intent.putExtra("user_address", autoAddress);
-            startActivity(intent);
-            finish();
-        }
 
         /***
          * 문자 보내기 권한 확인
@@ -141,15 +131,15 @@ public class CertifyActivity extends AppCompatActivity {
 
                 if (name.isEmpty() || num.isEmpty() || address.isEmpty()) {
                     if (name.isEmpty()) {
-                        Toast.makeText(CertifyActivity.this, "이름을 입력하세요", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResetActivity.this, "이름을 입력하세요", Toast.LENGTH_SHORT).show();
                     }
 
                     if (address.isEmpty()) {
-                        Toast.makeText(CertifyActivity.this, "주소를 입력하세요\n예) 서울특별시 도봉구 쌍문2동", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResetActivity.this, "주소를 입력하세요\n예) 서울특별시 도봉구 쌍문2동", Toast.LENGTH_SHORT).show();
                     }
 
                     if (num.isEmpty()) {
-                        Toast.makeText(CertifyActivity.this, "개인안심번호를 입력하세요", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResetActivity.this, "개인안심번호를 입력하세요", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
@@ -168,7 +158,7 @@ public class CertifyActivity extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if (snapshot != null) {
-                                    Toast.makeText(CertifyActivity.this, "계정이 등록되었습니다", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ResetActivity.this, "계정이 등록되었습니다", Toast.LENGTH_SHORT).show();
 
                                     SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = auto.edit();
@@ -186,7 +176,7 @@ public class CertifyActivity extends AppCompatActivity {
                                     finish();
 
                                 } else {
-                                    Toast.makeText(CertifyActivity.this, "계정 등록에 실패하셨습니다", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ResetActivity.this, "계정 등록에 실패하셨습니다", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -197,7 +187,7 @@ public class CertifyActivity extends AppCompatActivity {
                         });
 
                     } else {
-                        Toast.makeText(CertifyActivity.this, "휴대폰 번호 인증이 이뤄지지 않았습니다\n" +
+                        Toast.makeText(ResetActivity.this, "휴대폰 번호 인증이 이뤄지지 않았습니다\n" +
                                 "인증을 시도해주세요", Toast.LENGTH_SHORT).show();
                     }
                 }

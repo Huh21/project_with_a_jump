@@ -24,9 +24,9 @@
     <application
 
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_icon"
         android:label="GPS를 통한 전자출입명부"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project_with_a_jump"
         android:usesCleartextTraffic="true">
@@ -44,6 +44,8 @@
 
         // 본인인증 화면
         <activity android:name=".CertifyActivity"></activity>
+        <activity android:name=".ReCertiftActivity"></activity>
+        <activity android:name=".ResetActivity"></activity>
 
         // 출입명부 화면
         <activity android:name=".EntryActivity"></activity>
@@ -52,27 +54,24 @@
         // 사업자 화면
         <activity android:name=".MainActivity2"></activity>
         <activity android:name=".WebViewActivity"></activity>
-        <activity android:name=".HomeDefault"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".HomeDefault"
+            android:screenOrientation="portrait" />
         <activity android:name=".Loading" />
         <activity android:name=".RegisterActivity5" />
         <activity android:name=".RegisterActivity4" />
         <activity android:name=".RegisterActivity3" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".ChangePwdDialog"
-            android:screenOrientation="portrait"
-            tools:ignore="Instantiatable" />
         <activity
             android:name=".ChangePwdDialog"
             android:screenOrientation="portrait"
-            tools:ignore="DuplicateActivity,Instantiatable" />
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".HomeScreen"
             android:screenOrientation="portrait"
             tools:ignore="Instantiatable" />
         <activity
             android:name=".PeriodDialog"
-            android:screenOrientation="portrait"
             tools:ignore="Instantiatable" />
         <activity
             android:name=".ChangeOfficeHour"
