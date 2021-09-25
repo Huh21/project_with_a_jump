@@ -34,7 +34,7 @@ public class ChangeOfficeHour extends Fragment {
     boolean[] result = new boolean[7];
 
     DatabaseReference rootRef;
-    DatabaseReference uidRef;
+    DatabaseReference databaseReference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,20 +63,12 @@ public class ChangeOfficeHour extends Fragment {
 
         //저장된 값 불러오기
         takeInfo(mon1, mon2, dayName[0], dayName[1]);
-        //takeInfo(mon2, dayName[1]);
         takeInfo(tue1, tue2, dayName[2], dayName[3]);
-        //takeInfo(tue2, dayName[3]);
         takeInfo(wed1, wed2, dayName[4], dayName[5]);
-        //takeInfo(wed2, dayName[5]);
         takeInfo(thu1, thu2, dayName[6], dayName[7]);
-        //takeInfo(thu2, dayName[7]);
         takeInfo(fri1, fri2, dayName[8], dayName[9]);
-        //takeInfo(fri2, dayName[9]);
         takeInfo(sat1, sat2, dayName[10], dayName[11]);
-        //takeInfo(sat2, dayName[11]);
         takeInfo(sun1, sun2, dayName[12], dayName[13]);
-        //takeInfo(sun2, dayName[13]);
-
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,25 +124,29 @@ public class ChangeOfficeHour extends Fragment {
         if (result1 != "default") {
             editText1.setText(result1);
             editText2.setText(result2);
-        } else {
         }
     }
 
     //영업시간 수정(한 요일의 오픈/종료 시간 같이 저장)
     public void saveInfo(String input1, String input2, String key1, String key2, String day) {
+        //SharedPreferences에 저장
         SharedPreferences pref = getActivity().getSharedPreferences("officeTime", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(key1, input1);
         editor.putString(key2, input2);
         editor.commit();
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        rootRef = FirebaseDatabase.getInstance().getReference();
-        uidRef = rootRef.child("project_with_a_jump").child("ManageAccount").child(uid).child("officeHour").child(day);
+
+        //파이어베이스에 저장
+        SharedPreferences receivedPref = getActivity().getSharedPreferences("companyInfo", Context.MODE_PRIVATE);
+        String companyName = receivedPref.getString("placeName", "default");
+
+        rootRef = FirebaseDatabase.getInstance().getReference("project_with_a_jump").child("ManageAccount");
+        databaseReference= rootRef.child(companyName).child("officeHour").child(day);
 
         Time schedule = new Time();
         schedule.setOpen(input1);
         schedule.setClosed(input2);
-        uidRef.setValue(schedule);
+        databaseReference.setValue(schedule);
     }
 
 }

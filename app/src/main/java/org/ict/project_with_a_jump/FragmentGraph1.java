@@ -1,15 +1,19 @@
 package org.ict.project_with_a_jump;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -33,7 +37,10 @@ import java.util.Date;
 import java.util.Locale;
 
 public class FragmentGraph1 extends Fragment {
-    TextView nowDate1, nowDate2, nowYear, nowMonth, number, total;
+    DatabaseReference rootRef;
+    DatabaseReference databaseReference;
+
+    TextView nowDate1, nowDate2, total;
     BarDataSet barDataSet;
     BarData barData;
     ArrayList values = new ArrayList(); //그래프 데이터 값
@@ -41,6 +48,7 @@ public class FragmentGraph1 extends Fragment {
     int totalNumber = 0;
     private BarChart barChart;
 
+    Button clean;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.activity_fragment_graph1, container, false);
@@ -50,9 +58,17 @@ public class FragmentGraph1 extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //새로고침
+        clean = view.findViewById(R.id.clean);
+        clean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               getParentFragmentManager().beginTransaction().detach(FragmentGraph1.this).commit();
+               getParentFragmentManager().beginTransaction().attach(FragmentGraph1.this).commit();
+            }
+        });
+
         /* 해당 년도/월 나옴 */
-        //nowYear= view.findViewById(R.id.nowYear);
-        //nowMonth= view.findViewById(R.id.nowMonth);
         nowDate1 = view.findViewById(R.id.nowDate1);
         nowDate2 = view.findViewById(R.id.nowDate2);
 
@@ -62,8 +78,6 @@ public class FragmentGraph1 extends Fragment {
         SimpleDateFormat sdf2 = new SimpleDateFormat("M월");
         nowDate1.setText(sdf1.format(cal.getTime()));
         nowDate2.setText(sdf2.format(cal.getTime()));
-        //nowYear.setText(sdf1.format(cal.getTime()));
-        //nowMonth.setText(sdf2.format(cal.getTime()));
 
         /* 그래프 */
         barChart = view.findViewById(R.id.barChart);
@@ -71,9 +85,8 @@ public class FragmentGraph1 extends Fragment {
         long today = System.currentTimeMillis();
         Date date = new Date(today);
         SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy년MM월");
-        SimpleDateFormat dateFormat2 = new SimpleDateFormat("dd일");
+        //SimpleDateFormat dateFormat2 = new SimpleDateFormat("dd일");
         String month = dateFormat1.format(date); //이번 달
-        //String today2 = dateFormat2.format(date);
 
         values.clear();
         days.clear();
@@ -81,12 +94,14 @@ public class FragmentGraph1 extends Fragment {
         barChart.clear();
         totalNumber = 0;
 
+        SharedPreferences receivedPref = getActivity().getSharedPreferences("companyInfo", Context.MODE_PRIVATE);
+        String companyName = receivedPref.getString("placeName", "default");
+
         /* 일별 방문자 수 파악, 그래프에 반영하기 */
         total = view.findViewById(R.id.total); //총 방문자 수
-        //String uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference uidRef1 = rootRef.child("ManageList").child("국민떡볶이 덕성여대점");
-        uidRef1.child(month).addListenerForSingleValueEvent(new ValueEventListener() {
+        rootRef = FirebaseDatabase.getInstance().getReference("project_with_a_jump").child("ManageList");
+        databaseReference= rootRef.child(companyName);
+        databaseReference.child(month).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 int index = 0;
@@ -100,8 +115,6 @@ public class FragmentGraph1 extends Fragment {
                         total.setText(totalNumber + "명");
                     }
                     showChart(values, days);
-                } else {
-                    //number.setText("snapshot is null");
                 }
             }
 
@@ -116,10 +129,9 @@ public class FragmentGraph1 extends Fragment {
     public void showChart(ArrayList values, ArrayList days) {
         barDataSet = new BarDataSet(values, "일별 방문자 수");
 
-        //BarDataSet barDataSet= new BarDataSet(values,"일별 방문자 수");
         barData = new BarData(days, barDataSet);
-        barDataSet.setColor(Color.BLUE);
-        barDataSet.setValueTextSize(14f);
+        barDataSet.setColor(Color.rgb(63,81,181));
+        barDataSet.setValueTextSize(16f);
         barChart.setData(barData);
 
         //데이터값 float->int
@@ -137,28 +149,19 @@ public class FragmentGraph1 extends Fragment {
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(true);
         xAxis.setDrawLabels(true);
-        //xAxis.setLabelsToSkip(0);
         xAxis.setEnabled(true);
         xAxis.setTextSize(12f);
 
         //y축
-        YAxis yAxisLeft = barChart.getAxisLeft();
-        //yAxisLeft.setDrawLabels(false);
-        //yAxisLeft.setDrawAxisLine(false);
-        //yAxisLeft.setDrawGridLines(false);
-
         YAxis yAxisRight = barChart.getAxisRight();
         yAxisRight.setDrawLabels(false);
         yAxisRight.setDrawAxisLine(false);
         yAxisRight.setDrawGridLines(false);
 
-        //barChart.clear();
         barChart.setDrawGridBackground(false);
-        barChart.setTouchEnabled(true); //차트 터치x
+        barChart.setTouchEnabled(true);
         barChart.setPinchZoom(false);
         barChart.setDescription(null);
-        //barChart.setDescription("(일)");
-        //barChart.setDescriptionTextSize(12f);
         barChart.setVisibleXRangeMinimum(2);
         barChart.setVisibleXRangeMaximum(7);
         barChart.moveViewToX(7);

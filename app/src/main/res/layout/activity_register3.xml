@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="30dp"
-        android:backgroundTint="#009688"
         android:text="다음"
+        app:backgroundTint="#3F51B5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -41,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="사진 찍기"
+        app:backgroundTint="#3F51B5"
         app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

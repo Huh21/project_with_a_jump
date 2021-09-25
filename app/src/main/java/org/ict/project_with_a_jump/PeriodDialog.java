@@ -111,7 +111,7 @@ public class PeriodDialog {
                 } else {
                     String msg1 = pickedValue1 + "년 " + pickedValue2 + "월";
                     String msg2 = pickedValue3 + "년 " + pickedValue4 + "월";
-                    term.setText(msg1 + "~" + msg2);
+                    term.setText("선택된 기간: "+msg1 + "~" + msg2);
                     listener.close(pickedValue1, pickedValue2, pickedValue3, pickedValue4);
                     dialog.dismiss();
                 }

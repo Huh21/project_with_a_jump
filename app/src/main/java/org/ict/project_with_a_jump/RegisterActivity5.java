@@ -32,7 +32,7 @@ public class RegisterActivity5 extends AppCompatActivity {
     EditText sun1, sun2;
 
     DatabaseReference rootRef;
-    DatabaseReference uidRef;
+    DatabaseReference databaseReference;
 
 
     @Override
@@ -119,14 +119,16 @@ public class RegisterActivity5 extends AppCompatActivity {
         editor.commit();
 
         //파이어베이스에 저장
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        rootRef = FirebaseDatabase.getInstance().getReference();
-        uidRef = rootRef.child("project_with_a_jump").child("ManageAccount").child(uid).child("officeHour").child(day);
+        SharedPreferences receivedPref = getSharedPreferences("companyInfo", Context.MODE_PRIVATE);
+        String companyName = receivedPref.getString("placeName", "default");
+
+        rootRef = FirebaseDatabase.getInstance().getReference("project_with_a_jump").child("ManageAccount");
+        databaseReference= rootRef.child(companyName).child("officeHour").child(day);
 
         Time schedule = new Time();
         schedule.setOpen(input1);
         schedule.setClosed(input2);
-        uidRef.setValue(schedule);
+        databaseReference.setValue(schedule);
     }
 
 }

@@ -1,6 +1,8 @@
 package org.ict.project_with_a_jump;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class PersonalInfo extends Fragment {
     DatabaseReference rootRef;
-    DatabaseReference uidRef;
+    DatabaseReference databaseReference;
 
     TextView showName;
     TextView showBirth;
@@ -55,11 +57,14 @@ public class PersonalInfo extends Fragment {
         logout = view.findViewById(R.id.logout);
 
         //파이어베이스로부터 개인 정보 가져오기
+        SharedPreferences pref = getActivity().getSharedPreferences("companyInfo", Context.MODE_PRIVATE);
+        String companyName = pref.getString("placeName", "default");
+
+        //파이어베이스로부터 개인 정보 가져오기
         mAuth = FirebaseAuth.getInstance();
-        String uid = mAuth.getCurrentUser().getUid();
-        rootRef = FirebaseDatabase.getInstance().getReference();
-        uidRef = rootRef.child("project_with_a_jump").child("ManageAccount").child(uid);
-        uidRef.addValueEventListener(new ValueEventListener() {
+        rootRef = FirebaseDatabase.getInstance().getReference("project_with_a_jump").child("ManageAccount");
+        databaseReference = rootRef.child(companyName);
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot != null) {

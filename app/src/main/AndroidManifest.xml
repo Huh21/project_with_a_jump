@@ -52,43 +52,47 @@
         // 사업자 화면
         <activity android:name=".MainActivity2"></activity>
         <activity android:name=".WebViewActivity"></activity>
-        <activity android:name=".HomeDefault" />
+        <activity android:name=".HomeDefault"
+            android:screenOrientation="portrait"/>
         <activity android:name=".Loading" />
         <activity android:name=".RegisterActivity5" />
         <activity android:name=".RegisterActivity4" />
         <activity android:name=".RegisterActivity3" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".ChangePwdDialog"
+            android:screenOrientation="portrait"
             tools:ignore="Instantiatable" />
         <activity
             android:name=".ChangePwdDialog"
-            tools:ignore="Instantiatable" />
+            android:screenOrientation="portrait"
+            tools:ignore="DuplicateActivity,Instantiatable" />
         <activity
             android:name=".HomeScreen"
-            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             tools:ignore="Instantiatable" />
         <activity
             android:name=".PeriodDialog"
+            android:screenOrientation="portrait"
             tools:ignore="Instantiatable" />
         <activity
             android:name=".ChangeOfficeHour"
-            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             tools:ignore="Instantiatable" />
         <activity
             android:name=".PersonalInfo"
-            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             tools:ignore="Instantiatable" />
         <activity
             android:name=".FragmentGraph2"
-            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             tools:ignore="Instantiatable" />
         <activity
             android:name=".FragmentGraph1"
-            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             tools:ignore="Instantiatable" />
         <activity
             android:name=".History"
-            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             tools:ignore="Instantiatable" />
 
         <provider

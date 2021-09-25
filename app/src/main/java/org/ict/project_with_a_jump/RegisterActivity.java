@@ -1,8 +1,10 @@
 package org.ict.project_with_a_jump;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -272,6 +274,11 @@ public class RegisterActivity extends AppCompatActivity {
                         //setvalue(): database에 insert(삽입)
                         mDatabaseRef.child(account.getGpsData()).setValue(account);
                         mDatabaseRef.child(companyName).setValue(account);
+
+                        SharedPreferences pref = getSharedPreferences("companyInfo", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("placeName", account.getCompanyName());
+                        editor.commit();
 
                         Toast.makeText(RegisterActivity.this, "회원가입에 성공하셨습니다", Toast.LENGTH_SHORT).show();
                         nextPage = true;

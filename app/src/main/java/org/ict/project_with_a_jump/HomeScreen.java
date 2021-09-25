@@ -1,6 +1,8 @@
 package org.ict.project_with_a_jump;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +41,9 @@ public class HomeScreen extends Fragment {
 
     private Activity myActivity;
 
+    DatabaseReference rootRef;
+    DatabaseReference databaseReference;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.activity_home_screen, container, false);
@@ -70,30 +75,20 @@ public class HomeScreen extends Fragment {
         String dateString = sdf1.format(cal.getTime()); //오늘 날짜
         int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
 
-        //파이어베이스에서 시설이름 가져오기
-        DatabaseReference uidRef1 = rootRef.child("project_with_a_jump").child("ManageAccount").child(uid);
-        uidRef1.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot != null) {
-                    ManageAccount user = snapshot.getValue(ManageAccount.class);
-                    String companyName = user.getCompanyName();
-                    placeName.setText(companyName);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-
-            }
-        });
+        //시설 이름 보여주기
+        SharedPreferences pref = getActivity().getSharedPreferences("companyInfo", Context.MODE_PRIVATE);
+        String companyName = pref.getString("placeName", "default");
+        if(companyName != "default"){
+            placeName.setText(companyName);
+        }else{
+            placeName.setText("");
+        }
 
         //파이어베이스에서 오늘 영업시간 가져오기
-        DatabaseReference uidRef2 = rootRef.child("project_with_a_jump").child("ManageAccount").child(uid).child("officeHour").child(title[dayOfWeek - 1]);
-        uidRef2.addValueEventListener(new ValueEventListener() {
+        rootRef = FirebaseDatabase.getInstance().getReference("project_with_a_jump").child("ManageAccount");
+        databaseReference= rootRef.child(companyName).child("officeHour").child(title[dayOfWeek - 1]);
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot != null) {
@@ -114,6 +109,7 @@ public class HomeScreen extends Fragment {
 
             }
         });
+
 
         //현재시간(갱신됨)
         Thread th = new Thread(new Runnable() {

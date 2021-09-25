@@ -18,7 +18,7 @@
         android:id="@+id/nextbutton4"
         android:layout_width="124dp"
         android:layout_height="122dp"
-        android:backgroundTint="#009688"
+        app:backgroundTint="#3F51B5"
         android:text="전자출입명부 생성하기"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

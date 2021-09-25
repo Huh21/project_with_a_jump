@@ -1,6 +1,8 @@
 package org.ict.project_with_a_jump;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,9 @@ public class ChangePwdDialog extends DialogFragment {
     Button button_cancel;
     private Fragment fragment;
 
+    DatabaseReference rootRef;
+    DatabaseReference databaseReference;
+
     public ChangePwdDialog() {
     }
 
@@ -54,9 +59,11 @@ public class ChangePwdDialog extends DialogFragment {
         if (fragment != null) {
             DialogFragment dialogFragment = (DialogFragment) fragment;
 
-            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-            DatabaseReference uidRef1 = rootRef.child("project_with_a_jump").child("ManageAccount").child(uid);
+            SharedPreferences receivedPref = getActivity().getSharedPreferences("companyInfo", Context.MODE_PRIVATE);
+            String companyName = receivedPref.getString("placeName", "default");
+
+            rootRef = FirebaseDatabase.getInstance().getReference();
+            databaseReference = rootRef.child("project_with_a_jump").child("ManageAccount").child(companyName);
 
             //기존 비밀번호 일치 여부 확인
             confirm1.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +71,7 @@ public class ChangePwdDialog extends DialogFragment {
 
                 @Override
                 public void onClick(View v) {
-                    uidRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot snapshot) {
                             if (snapshot != null) {
@@ -80,10 +87,7 @@ public class ChangePwdDialog extends DialogFragment {
                                 } else {
                                     confirm2.setText("일치하지 않습니다.\n다시 입력해주세요.");
                                 }
-                            } else {
-
                             }
-
                         }
 
                         @Override
@@ -116,7 +120,7 @@ public class ChangePwdDialog extends DialogFragment {
                         Toast.makeText(getContext(), "비밀번호가 변경되었습니다.", Toast.LENGTH_SHORT).show();
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         user.updatePassword(newPwd1);
-                        uidRef1.child("password").setValue(newPwd1); //새로운 비밀번호 파이어베이스에 저장
+                        databaseReference.child("password").setValue(newPwd1); //새로운 비밀번호 파이어베이스에 저장
                         dialogFragment.dismiss();
 
                         Intent intent = new Intent(getActivity(), MainActivity2.class);
