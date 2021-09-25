@@ -35,11 +35,15 @@ public class MainActivity extends AppCompatActivity {
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-    String facilityName = "";
-    DatabaseReference reference = FirebaseDatabase.getInstance().getReference(); // 파이어베이스 사업자 데이터 연결
     // fine_location : coarse보다 더 정확한 위치 제공, coarse_location : 도시 블록 내에 위치 정확성 제공
+
+    DatabaseReference reference = FirebaseDatabase.getInstance().getReference(); // 파이어베이스 사업자 데이터 연결
+    DatabaseReference refer = reference.child("project_with_a_jump").child("ManageAccount");
+
     private boolean saveData;
+    String facilityName = "";
     private SharedPreferences checkData;
+
     private GpsTracker gpsTracker;
     private TextView textview_address;
     private TextView user_name;
@@ -51,10 +55,6 @@ public class MainActivity extends AppCompatActivity {
     private Button listBtn;
     private Button modifyBtn;
     private CheckBox auto_check;
-
-    //private int showCount = 0;
-    //private int findCount = 0;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             checkRunTimePermission();
             textview_address.setText(getGpsTracker());
+            findFacility("뿡");
         }
-
 
         // 본인인증 화면으로부터 사용자명 받아오기
         Intent intentFromCertification = getIntent();
@@ -90,11 +90,15 @@ public class MainActivity extends AppCompatActivity {
 
         // 현재 위치로 찾기
         ShowLocationButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View arg0) {
                 textview_address.setText(getGpsTracker()); // 사용자의 현재 위치 보여줌
-                String facilityName = findFacility("인천광역시 부평구 원적로 362");
+
+                findFacility(getGpsTracker());
+
+                if (facilityName.equals("")) {
+                    findFacility(getGpsTracker());
+                }
 
                 if ((facilityName).equals("not found")) {
                     Toast.makeText(MainActivity.this, "현재 위치에 해당하는 시설을 찾을 수 없습니다.", Toast.LENGTH_LONG).show();
@@ -107,11 +111,12 @@ public class MainActivity extends AppCompatActivity {
 
                         // 해당 시설의 명부 화면으로 이동
                         Intent intent = new Intent(getApplicationContext(), EntryActivity.class);
-                        intent.putExtra("facilityName", facilityName);
+                        intent.putExtra("facilityName", "국민");
                         intent.putExtra("user_num", num);
                         intent.putExtra("user_name", user_name.getText().toString());
                         intent.putExtra("user_address", address);
-                        startActivity(intent);
+                        // intent.putExtra("check_data", saveData);
+                        startActivityForResult(intent, 0);
                     }
                 }
             }
@@ -127,31 +132,26 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "시설명을 입력해주세요", Toast.LENGTH_LONG).show();
 
                 } else {
-                    String facilityName = findFacility(input);
+                    findFacility(input);
 
                     if ((facilityName).equals("not found")) {
                         Toast.makeText(MainActivity.this, "해당 시설의 명부가 존재하지 않습니다.\n"
                                 + "담당자에게 문의하세요.", Toast.LENGTH_LONG).show();
 
                     } else {
-                        if (facilityName.equals("")) {
-                            facilityName = findFacility(input);
-                            Toast.makeText(MainActivity.this, "...", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, facilityName + " 입장", Toast.LENGTH_LONG).show();
 
-                        } else {
-                            Toast.makeText(MainActivity.this, facilityName + " 입장", Toast.LENGTH_LONG).show();
-
-                            // 해당 시설의 명부 화면으로 이동
-                            Intent intent = new Intent(getApplicationContext(), EntryActivity.class);
-                            intent.putExtra("facilityName", facilityName);
-                            intent.putExtra("user_num", num);
-                            intent.putExtra("user_name", user_name.getText().toString());
-                            intent.putExtra("user_address", address);
-                            startActivity(intent);
-                        }
+                        // 해당 시설의 명부 화면으로 이동
+                        Intent intent = new Intent(getApplicationContext(), EntryActivity.class);
+                        intent.putExtra("facilityName", facilityName);
+                        intent.putExtra("user_num", num);
+                        intent.putExtra("user_name", user_name.getText().toString());
+                        intent.putExtra("user_address", address);
+                        // intent.putExtra("checkData", saveData);
+                        startActivityForResult(intent, 0);
                     }
                 }
-            }
+                }
         });
 
         // 계정 유형 전환 처리
@@ -163,15 +163,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /* // 사용자가 입장한 시설 명부 기록 확인
+        // 사용자가 입장한 시설 명부 기록 확인
         listBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-                Intent intent = new Intent(this, checkListActivity.class);
+                Intent intent = new Intent(getApplicationContext(), EntryActivity2.class);
                 intent.putExtra("user_num", num);
-                startActivity(intent);
+                startActivityForResult(intent, 0);
             }
         });
-
+        /*
         // 사용자 정보 수정 처리
         modifyBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
@@ -200,6 +200,34 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    // 주소나 사용자의 입력값을 통해 시설명을 찾아주는 함수
+    public void findFacility(String data) {
+        if (data.equals("뿡")) {
+            findFacility(getGpsTracker());
+
+        }
+
+        refer.child(data).child("companyName").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String value = value = snapshot.getValue(String.class);
+
+                if (value != null) {
+                    facilityName = value;
+
+                } else {
+                    facilityName = "not found";
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void load() { // 설정값 호출
@@ -238,34 +266,6 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog alert2 = alert.create();
         alert2.show();
-    }
-
-    // 주소나 사용자의 입력값을 통해 시설명을 찾아주는 함수
-    public String findFacility(String data) {
-        DatabaseReference refer1 = reference.child("project_with_a_jump").child("ManageAccount");
-        refer1.child(data).addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Boolean check = snapshot.hasChildren();
-
-                int size = (int) snapshot.getChildrenCount();
-                if (size != 0) {
-                    ManageAccount user = snapshot.getValue(ManageAccount.class);
-                    facilityName = user.getCompanyName();
-
-                } else {
-                    facilityName = "not found";
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
-
-        return facilityName;
     }
 
     // 현재 위치의 주소 받아오는 메소드

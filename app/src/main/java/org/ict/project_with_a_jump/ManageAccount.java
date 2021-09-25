@@ -31,9 +31,9 @@ public class ManageAccount {
         this.daum3 = daum3;
         this.daum4 = daum4;
         this.gpsData = gpsData;
-        this.emailId = emailId;
         this.idToken = idToken;
         this.name = name;
+        this.emailId = emailId;
         this.password = password;
     }
 

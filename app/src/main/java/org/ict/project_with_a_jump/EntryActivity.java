@@ -25,6 +25,8 @@ import java.util.Locale;
 public class EntryActivity extends AppCompatActivity {
     Dialog dialog;
     TextView Day;
+    Button yesBtn;
+
     //사업자 전자출입명부 firebase 연결
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
@@ -35,6 +37,7 @@ public class EntryActivity extends AppCompatActivity {
     String formatDate = dateFormat.format(date);
     private final DatabaseReference databaseReference = database.getReference("project_with_a_jump").child("ManageList");
     EditText NowPlace, UserNum, Name, LivePlace, Temperature;
+
     //사용자 Database
     FirebaseDatabase database2 = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference2 = database2.getReference();
@@ -42,7 +45,7 @@ public class EntryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_entry);
 
         //inflate
         LayoutInflater inflater = getLayoutInflater();
@@ -66,6 +69,7 @@ public class EntryActivity extends AppCompatActivity {
         LivePlace.setText(user_address);
         String facilityName = intent.getStringExtra("facilityName");
         NowPlace.setText(facilityName);
+        Boolean checkData = intent.getExtras().getBoolean("checkData");
 
         //팝업창
         dialog = new Dialog(EntryActivity.this);
@@ -82,13 +86,15 @@ public class EntryActivity extends AppCompatActivity {
         Day = findViewById(R.id.Day);
         Day.setText(formatDate);
 
+
     }
 
     public void showDialog() {
         dialog.show();
 
+
         //동의
-        Button yesBtn = dialog.findViewById(R.id.yesBtn);
+        yesBtn = dialog.findViewById(R.id.yesBtn);
 
         yesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,10 +139,6 @@ public class EntryActivity extends AppCompatActivity {
                         .child(UserNum.getText().toString())
                         .push()
                         .setValue(entryList);
-
-                //다음 액티비티와 연결
-                Intent intent = new Intent(EntryActivity.this, MainActivity2.class);
-                startActivity(intent);
             }
         });
 

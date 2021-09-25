@@ -10,7 +10,7 @@ public class EntryActivity2 extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_entry2);
     }
 
 }
